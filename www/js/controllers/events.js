@@ -5,5 +5,7 @@ angular.module('starter.controllers')
 
 EventsCtrl.$inject = ['$scope', 'Events'];
 function EventsCtrl($scope, Events) {
+    
     $scope.events = Events.fetchAll();
+    
 }

@@ -17,8 +17,20 @@
           <input type="password" ng-model="loginData.password">
         </label>
         <label class="item">
-          <button class="button button-block button-positive" type="submit">Log in</button>
+            <button class="button button-block button-positive" type="submit">Log in</button>
+            <button class="button button-block button-positive" type="submit">Register</button>
         </label>
+          <label class="item">
+              <a class="btn-auth btn-facebook large" ng-click="doLogin('facebook')">
+                  Sign in with <b>Facebook</b>
+              </a>
+              <a class="btn-auth btn-google large" ng-click="doLogin('google')">
+                  Sign in with <b>Google+</b>
+              </a>
+              <a class="btn-auth btn-twitter large" ng-click="doLogin('twitter')">
+                  Sign in with <b>Twitter</b>
+              </a>
+          </label>
       </div>
     </form>
   </ion-content>
