@@ -1,12 +1,12 @@
 <ion-view>
-  <ion-header-bar align-title="center" class="bar-light">
-        <h1 class="title">{{$state}}f</h1>
-        <div class="buttons">
-            <button class="button button-clear" ng-click="closeLogin()">Close</button>
-        </div>
+  <ion-header-bar>
+    <h1 class="title">Login</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeLogin()">Close</button>
+    </div>
   </ion-header-bar>
   <ion-content>
-    <form ng-submit="doLogin()">
+    <form ng-submit="doRegister()">
       <div class="list">
 
         <label class="item item-input">
@@ -20,14 +20,9 @@
         </label>
 
         <label class="item">
-            <button class="button button-block button-positive" type="submit">Log in</button>
             <button class="button button-block button-balanced" type="submit">Register</button>
+            <button class="button button-block button-positive" type="submit">Log in</button>
         </label>
-          <label class="item">
-              <button class="button btn-auth btn-facebook button-positive large" ng-click="doLogin('facebook')">
-                  Sign in with <b>Facebook</b>
-              </button>
-          </label>
       </div>
     </form>
   </ion-content>

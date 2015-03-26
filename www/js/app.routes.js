@@ -9,17 +9,29 @@ function routes($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/app/events');
 
     $stateProvider
+
+        // Main view
+        // Template based on a sidebar and custom content in the middle
         .state('app', {
             url: "/app",
             abstract: true,
-            templateUrl: "templates/menu.html",
+            templateUrl: "templates/sidebar.html",
             controller: 'AppCtrl'
         })
 
         .state('login', {
             url: "/login",
             templateUrl: "templates/login.html",
-            controller: 'LoginCtrl'
+            controller: 'LoginCtrl',
+            data: {
+                title: 'Login'
+            }
+        })
+
+        .state('logout', {
+            url: '/logout',
+            templateUrl: "",
+            controller: 'LogoutCtrl'
         })
         
         // Event list
@@ -29,6 +41,17 @@ function routes($stateProvider, $urlRouterProvider) {
                 'menuContent': {
                     templateUrl: "templates/events.html",
                     controller: 'EventsCtrl'
+                }
+            }
+        })
+
+        // Contacts list
+        .state('app.contacts', {
+            url: "/contacts",
+            views: {
+                'menuContent': {
+                    templateUrl: "templates/contacts.html",
+                    controller: 'ContactsCtrl'
                 }
             }
         })

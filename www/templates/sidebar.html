@@ -13,7 +13,10 @@
                 <button class="button button-icon button-clear ion-navicon" menu-toggle="right"></button>
             </ion-nav-buttons>
         </ion-nav-bar>
+
+
         <ion-nav-view name="menuContent"></ion-nav-view>
+
     </ion-side-menu-content>
 
     <!--Left menu-->
@@ -23,9 +26,10 @@
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item nav-clear menu-close href="#/app/search">Search</ion-item>
-                <ion-item nav-clear menu-close href="#/app/browse">Browse</ion-item>
-                <ion-item nav-clear menu-close href="#/app/playlists">Playlists</ion-item>
+                <ion-item nav-clear menu-close ui-sref="app.search">Search</ion-item>
+                <ion-item nav-clear menu-close ui-sref="app.browse">Browse</ion-item>
+                <ion-item nav-clear menu-close ui-sref="app.playlists">Playlists</ion-item>
+                <ion-item nav-clear menu-close ui-sref="logout">Logout</ion-item>
             </ion-list>
         </ion-content>
     </ion-side-menu>

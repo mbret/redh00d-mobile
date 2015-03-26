@@ -7,12 +7,14 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', [
-    'ionic', 
+    'ionic',
+    'ngMockE2E',
     'starter.routes',
     'starter.controllers',
     'starter.services'
 ])
-.run(run);
+    .run(fakeBackend)
+    .run(run);
 
 angular.module('starter.services', []);
 angular.module('starter.controllers', []);
@@ -33,4 +35,29 @@ function run($ionicPlatform, $state, user) {
         
         $state.go('login');
     });
+}
+
+function fakeBackend($ionicPlatform, $httpBackend){
+
+    //console.log($httpBackend);
+    var events = [
+        { title: 'Event 1', description: 'First description', date: null },
+        { title: 'Event 2', description: 'Another description', date: null },
+        { title: 'Event 3', description: 'Another another description', date: null }
+    ];
+
+    // returns the current list of customers or a 401 depending on authorization flag
+    $httpBackend.whenGET('https://events').respond(function (method, url, data, headers) {
+        return authorized ? [200, events] : [401];
+    });
+    $httpBackend.whenPOST('https://login').respond(function(method, url, data) {
+        authorized = true;
+        return  [200 , { authorizationToken: "NjMwNjM4OTQtMjE0Mi00ZWYzLWEzMDQtYWYyMjkyMzNiOGIy" } ];
+    });
+    $httpBackend.whenPOST('https://logout').respond(function(method, url, data) {
+        authorized = false;
+        return [200];
+    });
+    // All other http requests will pass through
+    $httpBackend.whenGET(/.*/).passThrough();
 }
