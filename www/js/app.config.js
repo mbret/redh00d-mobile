@@ -5,5 +5,13 @@ angular.module('starter')
         authenticated: false // pass to true to bypass login
     })
     .constant('CONFIG', {
-         foo: 'bar'   
-    });
+        route: {
+            login: 'https://localhost:1337/login'
+        },
+        state: {
+            home: 'app.events'
+        }
+    })
+    .config(['$httpProvider', function($httpProvider) {
+        $httpProvider.interceptors.push('httpResponseInterceptor');
+    }]);

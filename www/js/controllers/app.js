@@ -3,7 +3,7 @@
 angular.module('starter.controllers')
     .controller('AppCtrl', AppCtrl);
 
-function AppCtrl($scope, $ionicModal, $timeout, $rootScope, user) {
+function AppCtrl($scope, $ionicModal, $timeout, $rootScope, user, $ionicLoading) {
 
     // Form data for the login modal
     //$scope.loginData = {};
@@ -20,4 +20,9 @@ function AppCtrl($scope, $ionicModal, $timeout, $rootScope, user) {
     //$scope.login = function() {
     //    $scope.modal.show();
     //};
+
+    $scope.$on('$stateChangeSuccess', function () {
+        console.log('dsf');
+        $ionicLoading.hide();
+    });
 }

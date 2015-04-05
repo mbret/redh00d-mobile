@@ -3,41 +3,61 @@
 angular.module('starter.controllers')
     .controller('LoginCtrl', LoginCtrl);
 
-function LoginCtrl($scope, $rootScope, $timeout, user, $state, $ionicLoading, $ionicPopup, AuthenticationService) {
+LoginCtrl.$injector = ['$scope', '$rootScope', '$timeout', 'user', '$state', '$ionicLoading', '$ionicPopup', 'AuthenticationService', 'CONFIG'];
+function LoginCtrl($scope, $rootScope, $timeout, user, $state, $ionicLoading, $ionicPopup, AuthenticationService, CONFIG) {
 
-    $scope.data = {};
+    $scope.data = {
+        email: 'user@user.com',
+        password: 'password'
+    };
 
     // dev bypass
     if(user.authenticated === true){
-        $state.go('app.events');
+        $state.go(CONFIG.state.home);
     }
 
-    // Perform the login action when the user submits the login form
-    $scope.doLogin = function(provider) {
+    /**
+     *  
+     */
+    $scope.doRegister = function(){
+        $ionicPopup.alert({
+            title: 'Error!',
+            template: 'Not yet supported'
+        });
+    };
 
+    /**
+     * Perform the login action when the user submits the login form
+     * @param provider
+     */
+    $scope.doLogin = function(provider) {
+        console.log(provider);
         if(provider){
             $ionicPopup.alert({
                 title: 'Error!',
-                template: 'The provider authentication method is not supported yet! Zblaa'
-            })
+                template: 'Not yet supported'
+            });
         }
         else{
-            AuthenticationService.login($scope.data.username, $scope.data.password)
+            console.log('sdf');
+            $ionicLoading.show({
+                template: 'Logging in...'
+            });
+            
+            AuthenticationService.login($scope.data.email, $scope.data.password)
                 .then(function(){
-                    $ionicLoading.show({
-                        template: 'Logging in...'
-                    });
-
-                    // Simulate a login delay. Remove this and replace with your login
-                    // code if using a login system
-                    $timeout(function() {
-                        user.authenticated = true;
-                        $state.go('app.events');
-                        $ionicLoading.hide();
-                    }, 1000);
+                    user.authenticated = true;
+                    $state.go(CONFIG.state.home);
+                    $ionicLoading.hide();
                 })
                 .catch(function(err){
-
+                    // Bad request
+                    if(err && err.status && err.status == 400){
+                        $ionicPopup.alert({
+                            title: 'Auth error',
+                            template: 'Bad credentials'
+                        })
+                    }
                 });
         }
 
