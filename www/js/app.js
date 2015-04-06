@@ -19,8 +19,9 @@ angular.module('starter.services', []);
 angular.module('starter.controllers', []);
 angular.module('starter.routes', []);
 
-function run($ionicPlatform, $state, user, UserService, CONFIG, $log) {
-    
+function run($ionicPlatform, $state, user, UserService, CONFIG, $log, $cordovaSplashscreen) {
+
+    // http://ngcordova.com/docs/common-issues/
     $ionicPlatform.ready(function() {
         
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -45,5 +46,6 @@ function run($ionicPlatform, $state, user, UserService, CONFIG, $log) {
                 $log.debug('app -> run -> user could not be authenticated, login needed');
                 $state.go(CONFIG.state.login);
             });
+
     });
 }
