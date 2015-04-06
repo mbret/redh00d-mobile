@@ -8,6 +8,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', [
     'ionic',
+    'ngCordova',
     'starter.routes',
     'starter.controllers',
     'starter.services'
@@ -18,9 +19,10 @@ angular.module('starter.services', []);
 angular.module('starter.controllers', []);
 angular.module('starter.routes', []);
 
-function run($ionicPlatform, $state, user) {
+function run($ionicPlatform, $state, user, UserService, CONFIG, $log) {
     
     $ionicPlatform.ready(function() {
+        
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
         if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -30,7 +32,18 @@ function run($ionicPlatform, $state, user) {
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
         }
-        
-        $state.go('login');
+
+        // Try to get user information if authentication is still valid
+        $log.debug('app -> run -> try to authenticate user');
+        UserService.me()
+            .then(function(data){
+                $log.debug('app -> run -> user automatically authenticated, login bypassed');
+                angular.extend(user, data);
+                $state.go(CONFIG.state.home);
+            })
+            .catch(function(err){
+                $log.debug('app -> run -> user could not be authenticated, login needed');
+                $state.go(CONFIG.state.login);
+            });
     });
 }

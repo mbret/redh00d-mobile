@@ -22,7 +22,6 @@ function AppCtrl($scope, $ionicModal, $timeout, $rootScope, user, $ionicLoading)
     //};
 
     $scope.$on('$stateChangeSuccess', function () {
-        console.log('dsf');
         $ionicLoading.hide();
     });
 }

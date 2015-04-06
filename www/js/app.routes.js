@@ -45,43 +45,43 @@ function routes($stateProvider, $urlRouterProvider) {
             }
         })
 
-        // Contacts list
-        .state('app.contacts', {
-            url: "/contacts",
-            views: {
-                'menuContent': {
-                    templateUrl: "templates/contacts.html",
-                    controller: 'ContactsCtrl'
-                }
-            }
-        })
-
-        .state('app.search', {
-            url: "/search",
-            views: {
-                'menuContent': {
-                    templateUrl: "templates/search.html"
-                }
-            }
-        })
-
-        .state('app.browse', {
-            url: "/browse",
-            views: {
-                'menuContent': {
-                    templateUrl: "templates/browse.html"
-                }
-            }
-        })
-
-        .state('app.single', {
-            url: "/playlists/:playlistId",
-            views: {
-                'menuContent': {
-                    templateUrl: "templates/playlist.html",
-                    controller: 'PlaylistCtrl'
-                }
-            }
-        });
+        //// Contacts list
+        //.state('app.contacts', {
+        //    url: "/contacts",
+        //    views: {
+        //        'menuContent': {
+        //            templateUrl: "templates/contacts.html",
+        //            controller: 'ContactsCtrl'
+        //        }
+        //    }
+        //})
+        //
+        //.state('app.search', {
+        //    url: "/search",
+        //    views: {
+        //        'menuContent': {
+        //            templateUrl: "templates/search.html"
+        //        }
+        //    }
+        //})
+        //
+        //.state('app.browse', {
+        //    url: "/browse",
+        //    views: {
+        //        'menuContent': {
+        //            templateUrl: "templates/browse.html"
+        //        }
+        //    }
+        //})
+        //
+        //.state('app.single', {
+        //    url: "/playlists/:playlistId",
+        //    views: {
+        //        'menuContent': {
+        //            templateUrl: "templates/playlist.html",
+        //            controller: 'PlaylistCtrl'
+        //        }
+        //    }
+        //});
 
 }

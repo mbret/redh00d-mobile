@@ -4,14 +4,23 @@ angular.module('starter')
     .value('user', {
         authenticated: false // pass to true to bypass login
     })
-    .constant('CONFIG', {
-        route: {
-            login: 'https://localhost:1337/login'
-        },
-        state: {
-            home: 'app.events'
-        }
+    .config(function($provide) {
+        var apiUrl = 'https://localhost:1337';
+        var config = {
+            apiUrl: apiUrl,
+            route: {
+                login: apiUrl + '/auth/login',
+                facebookAuth: apiUrl + '/auth/facebook',
+                me: apiUrl + '/helper/me'
+            },
+            state: {
+                home: 'app.events',
+                login: 'login'
+            }
+        };
+        $provide.constant('CONFIG', config);
     })
     .config(['$httpProvider', function($httpProvider) {
         $httpProvider.interceptors.push('httpResponseInterceptor');
+        $httpProvider.interceptors.push('httpRequestInterceptor');
     }]);
