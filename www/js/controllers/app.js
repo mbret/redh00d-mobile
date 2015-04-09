@@ -3,7 +3,7 @@
 angular.module('starter.controllers')
     .controller('AppCtrl', AppCtrl);
 
-function AppCtrl($scope, $ionicModal, $timeout, $rootScope, user, $ionicLoading) {
+function AppCtrl($scope, $ionicModal, $timeout, $rootScope, $log, $ionicLoading) {
 
     // Form data for the login modal
     //$scope.loginData = {};
@@ -21,7 +21,8 @@ function AppCtrl($scope, $ionicModal, $timeout, $rootScope, user, $ionicLoading)
     //    $scope.modal.show();
     //};
 
-    $scope.$on('$stateChangeSuccess', function () {
+    $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+        $log.debug('$stateChangeSuccess -> ' + toState.name);
         $ionicLoading.hide();
     });
 }

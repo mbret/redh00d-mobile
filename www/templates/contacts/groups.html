@@ -1,0 +1,11 @@
+<ion-view view-title="Groups">
+
+    <ion-content>
+        <ion-list>
+            <ion-item ng-repeat="group in groups" ui-sref="app.contacts.groups({id:group.id})">
+                {{group.name}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+
+</ion-view>

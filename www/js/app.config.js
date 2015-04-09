@@ -14,7 +14,7 @@ angular.module('starter')
                 me: apiUrl + '/helper/me'
             },
             state: {
-                home: 'app.events',
+                home: 'app.contacts.list',
                 login: 'login'
             }
         };
@@ -23,4 +23,11 @@ angular.module('starter')
     .config(['$httpProvider', function($httpProvider) {
         $httpProvider.interceptors.push('httpResponseInterceptor');
         $httpProvider.interceptors.push('httpRequestInterceptor');
-    }]);
+    }])
+    .config(configureIonic);
+
+
+function configureIonic($ionicConfigProvider) {
+
+    $ionicConfigProvider.tabs.position('bottom'); //Places them at the bottom for all OS
+}

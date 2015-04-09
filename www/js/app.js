@@ -34,19 +34,29 @@ function run($ionicPlatform, $state, user, UserService, CONFIG, $log, $cordovaSp
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
         }
+
+
+        setTimeout(function(){
+            
+            // Try to get user information if authentication is still valid
+            $log.debug('app -> run -> try to authenticate user');
+            UserService.me()
+                .then(function(data){
+                    $log.debug('app -> run -> user automatically authenticated, login bypassed');
+                    angular.extend(user, data);
+                    $state.go(CONFIG.state.home);
+                    // ...
+                })
+                .catch(function(err){
+                    $log.debug('app -> run -> user could not be authenticated, login needed');
+                    $state.go(CONFIG.state.login);
+                    // ...
+                    
+                });
+            
+        }, 2000);
         
-        // Try to get user information if authentication is still valid
-        $log.debug('app -> run -> try to authenticate user');
-        UserService.me()
-            .then(function(data){
-                $log.debug('app -> run -> user automatically authenticated, login bypassed');
-                angular.extend(user, data);
-                $state.go(CONFIG.state.home);
-            })
-            .catch(function(err){
-                $log.debug('app -> run -> user could not be authenticated, login needed');
-                $state.go(CONFIG.state.login);
-            });
+        // ..
 
     });
 }

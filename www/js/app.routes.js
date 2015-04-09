@@ -6,7 +6,8 @@ angular.module('starter.routes')
 function routes($stateProvider, $urlRouterProvider) {
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/events');
+    // READ IT : when app is launching this route is called and is then viewed for a second while application take control
+    $urlRouterProvider.otherwise('/login');
 
     $stateProvider
 
@@ -15,7 +16,7 @@ function routes($stateProvider, $urlRouterProvider) {
         .state('app', {
             url: "/app",
             abstract: true,
-            templateUrl: "templates/sidebar.html",
+            template: '<ion-nav-view></ion-nav-view>',
             controller: 'AppCtrl'
         })
 
@@ -35,27 +36,42 @@ function routes($stateProvider, $urlRouterProvider) {
         })
         
         // Event list
-        .state('app.events', {
-            url: "/events",
+        //.state('app.events', {
+        //    url: "/events",
+        //    views: {
+        //        'menuContent': {
+        //            templateUrl: "templates/events.html",
+        //            controller: 'EventsCtrl'
+        //        }
+        //    }
+        //})
+
+        // Contacts list
+        .state('app.contacts', {
+            url: "/contacts",
+            abstract: true,
+            templateUrl: "templates/contacts/tabs.html",
+            controller: 'ContactsCtrl'
+        })
+        .state('app.contacts.list', {
+            url: '/contacts/list',
             views: {
-                'menuContent': {
-                    templateUrl: "templates/events.html",
-                    controller: 'EventsCtrl'
+                'list': {
+                    templateUrl: "templates/contacts/list.html",
+                    controller: 'ContactsListCtrl'
+                }
+            }
+        })
+        .state('app.contacts.groups', {
+            url: '/contacts/groups/:id',
+            views: {
+                'groups': {
+                    templateUrl: "templates/contacts/groups.html",
+                    controller: 'ContactsGroupsCtrl'
                 }
             }
         })
 
-        //// Contacts list
-        //.state('app.contacts', {
-        //    url: "/contacts",
-        //    views: {
-        //        'menuContent': {
-        //            templateUrl: "templates/contacts.html",
-        //            controller: 'ContactsCtrl'
-        //        }
-        //    }
-        //})
-        //
         //.state('app.search', {
         //    url: "/search",
         //    views: {
