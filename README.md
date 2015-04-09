@@ -2,4 +2,5 @@
 
 ## Android
 - run : ionic run android
+
 - debug : adb logcat

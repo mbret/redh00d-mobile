@@ -5,7 +5,7 @@ angular.module('starter')
         authenticated: false // pass to true to bypass login
     })
     .config(function($provide) {
-        var apiUrl = 'https://localhost:1337';
+        var apiUrl = 'https://localhost:1340';
         var config = {
             apiUrl: apiUrl,
             route: {

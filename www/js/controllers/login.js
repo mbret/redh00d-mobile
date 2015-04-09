@@ -3,8 +3,8 @@
 angular.module('starter.controllers')
     .controller('LoginCtrl', LoginCtrl);
 
-LoginCtrl.$injector = ['$scope', '$log', 'popupService', 'user', '$state', '$ionicLoading', '$ionicPopup', 'AuthenticationService', 'CONFIG', '$localStorage', 'UserService'];
-function LoginCtrl($scope, $log, popupService, user, $state, $ionicLoading, $ionicPopup, AuthenticationService, CONFIG, $localStorage, UserService) {
+LoginCtrl.$injector = ['$rootScope', '$scope', '$log', 'popupService', 'user', '$state', '$ionicLoading', '$ionicPopup', 'AuthenticationService', 'CONFIG', '$localStorage', 'UserService', '$cordovaOauth', '$cordovaInAppBrowser'];
+function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicLoading, $ionicPopup, AuthenticationService, CONFIG, $localStorage, UserService, $cordovaOauth, $cordovaInAppBrowser) {
 
     $scope.data = {
         email: 'user@user.com',
@@ -33,12 +33,40 @@ function LoginCtrl($scope, $log, popupService, user, $state, $ionicLoading, $ion
     $scope.doLogin = function(provider) {
         console.log(provider);
         if(provider){
-            window.open(CONFIG.route.facebookAuth, '_system', 'location=yes');
+            var options = {
+                location: 'yes',
+                clearcache: 'yes',
+                toolbar: 'no'
+            };
+            $cordovaInAppBrowser.open(CONFIG.route.facebookAuth, '_blank', options)
+                .then(function(event) {
+                    $localStorage.set('accessToken', result.access_token);
+                    console.log(result);
+                })
+                .catch(function(event) {
+                    popupService.error(event);
+                    $log.error(event);
+                });
+            $rootScope.$on('$cordovaInAppBrowser:loadstart', function(e, event){
+                $log.debug('$cordovaInAppBrowser:loadstart');
+            });
+
+            $rootScope.$on('$cordovaInAppBrowser:loadstop', function(e, event){
+                $log.debug('$cordovaInAppBrowser:loadstop');
+            });
+
+            $rootScope.$on('$cordovaInAppBrowser:loaderror', function(e, event){
+                $log.debug('$cordovaInAppBrowser:loaderror');
+            });
+
+            $rootScope.$on('$cordovaInAppBrowser:exit', function(e, event){
+                $log.debug('$cordovaInAppBrowser:exit');
+            });
             //window.open('http', '_blank', 'location=no,toolbar=no');
             //$cordovaOauth.facebook("440811692744629", ["email", "read_stream", "user_website", "user_location", "user_relationships"]).then(function(result) {
             //    $localStorage.set('accessToken', result.access_token);
             //    console.log(result);
-            //}, function(error) {
+            //}, function(error){
             //    popupService.error(error);
             //    $log.error(error);
             //});

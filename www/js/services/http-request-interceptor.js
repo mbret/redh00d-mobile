@@ -24,7 +24,7 @@ function httpRequestInterceptor($q,$log, CONFIG, $localStorage){
             // pass access_token to each request (only for api request)
             if ( config.url.indexOf(CONFIG.apiUrl) === 0 && $localStorage.has('access_token')) {
                 $log.debug('httpRequestInterceptor -> request -> access_token injected : ' + $localStorage.get('access_token').substring(0, 30) + '****');
-                config.headers.Authorization = 'Bearer ' + $localStorage.get('access_token');
+                config.headers.Authorization = 'JWT ' + $localStorage.get('access_token');
             }
             
             return config;

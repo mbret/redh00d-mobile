@@ -19,11 +19,12 @@ angular.module('starter.services', []);
 angular.module('starter.controllers', []);
 angular.module('starter.routes', []);
 
-function run($ionicPlatform, $state, user, UserService, CONFIG, $log, $cordovaSplashscreen) {
+function run($ionicPlatform, $state, user, UserService, CONFIG, $log, $cordovaSplashscreen, $cordovaInAppBrowser) {
+
 
     // http://ngcordova.com/docs/common-issues/
     $ionicPlatform.ready(function() {
-        
+
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
         if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -33,7 +34,7 @@ function run($ionicPlatform, $state, user, UserService, CONFIG, $log, $cordovaSp
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
         }
-
+        
         // Try to get user information if authentication is still valid
         $log.debug('app -> run -> try to authenticate user');
         UserService.me()

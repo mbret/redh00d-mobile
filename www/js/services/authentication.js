@@ -17,10 +17,10 @@ function AuthenticationService($http, CONFIG, $q, $log, $localStorage){
         login: function(email, password) {
             return $http.post(CONFIG.route.login, { email: email, password: password })
                 .success(function (data, status, headers, config) {
-                    $log.debug('authentication success -> access_token : ' + data.access_token);
+                    $log.debug('authentication success -> access_token : ' + data.token);
                     
                     // save access token for futur request
-                    $localStorage.set('access_token', data.access_token);
+                    $localStorage.set('access_token', data.token);
 
                 })
                 .error(function (data, status, headers, config) {
