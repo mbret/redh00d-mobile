@@ -11,27 +11,14 @@ function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicL
         password: 'password'
     };
 
-    // dev bypass
-    if(user.authenticated === true){
-        $state.go(CONFIG.state.home);
-    }
-
-    /**
-     *  
-     */
-    $scope.sdf = function(){
-        $ionicPopup.alert({
-            title: 'Error!',
-            template: 'Not yet supported'
-        });
-    };
-
     /**
      * Perform the login action when the user submits the login form
      * @param provider
      */
     $scope.doLogin = function(provider) {
         console.log(provider);
+        
+        // Log in with provider (Facebook, Google, etc)
         if(provider){
             var options = {
                 location: 'yes',
@@ -62,34 +49,18 @@ function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicL
             $rootScope.$on('$cordovaInAppBrowser:exit', function(e, event){
                 $log.debug('$cordovaInAppBrowser:exit');
             });
-            //window.open('http', '_blank', 'location=no,toolbar=no');
-            //$cordovaOauth.facebook("440811692744629", ["email", "read_stream", "user_website", "user_location", "user_relationships"]).then(function(result) {
-            //    $localStorage.set('accessToken', result.access_token);
-            //    console.log(result);
-            //}, function(error){
-            //    popupService.error(error);
-            //    $log.error(error);
-            //});
-        }
-        else{
-            $ionicLoading.show({
-                template: 'Logging in...'
-            });
 
-            // "Log user" -> request a access token
+        }
+        // Login with credentials
+        else{
             AuthenticationService.login($scope.data.email, $scope.data.password)
-                .then(function(){
-                    // Load account informations
-                    UserService.me().then(function(data){
-                        angular.extend(user, data);
-                        $state.go(CONFIG.state.home);
-                    });
+                .then(function(user){
+                    angular.extend(user, data);
+                    $state.go(CONFIG.state.home);
                 })
-                .catch(function(err){
-                    $ionicLoading.hide();
-                    
+                .catch(function (err) {
                     // Bad request
-                    if(err && err.status && err.status == 400){
+                    if(err && err.status && err.status === 400){
                         popupService.badCredentials();
                     }
                 });

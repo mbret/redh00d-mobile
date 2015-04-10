@@ -3,29 +3,40 @@
 angular.module('starter.services')
     .factory('AuthenticationService', AuthenticationService);
 
-AuthenticationService.$injector = ['$http', 'CONFIG', '$q', '$log', '$localStorage'];
-function AuthenticationService($http, CONFIG, $q, $log, $localStorage){
+AuthenticationService.$injector = ['$http', 'CONFIG', '$q', '$log', '$localStorage', 'UserService', '$rootScope', 'EVENTS'];
+function AuthenticationService($http, CONFIG, $q, $log, $localStorage, UserService, $rootScope, EVENTS){
 
     var service = {
 
         /**
+         * Log in a user according to the given email / password.
          *
          * @param email
          * @param password
-         * @returns {*}
+         * @returns {*} The user data or error with status code.
          */
         login: function(email, password) {
             return $http.post(CONFIG.route.login, { email: email, password: password })
-                .success(function (data, status, headers, config) {
-                    $log.debug('authentication success -> access_token : ' + data.token);
+                .then(function (data) {
+                    $log.debug('authentication success -> access_token : ' + data.data.token);
                     
                     // save access token for futur request
-                    $localStorage.set('access_token', data.token);
+                    $localStorage.set('access_token', data.data.token);
 
+                    // Load account information, now this method should work.
+                    // will return data or null
+                    return UserService.me().then(function(data){
+                        // We have an unexpected error here, the user should be logged!
+                        if(!data){
+                            $rootScope.$broadcast(EVENTS.UNEXPECTED_ERROR);
+                            return $q.reject();
+                        }
+                        return data;
+                    })
                 })
-                .error(function (data, status, headers, config) {
+                .catch(function (err) {
                     $log.debug('AuthenticationService -> login -> login failed');
-                    //$rootScope.$broadcast('event:auth-login-failed', status);
+                    return $q.reject(err);
                 });
         },
 

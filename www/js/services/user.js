@@ -3,19 +3,28 @@
 angular.module('starter.services')
     .factory('UserService', UserService);
 
-UserService.$injector = ['$http', 'CONFIG', '$rootScope', '$log', '$localStorage'];
-function UserService($http, CONFIG, $rootScope, $log, $localStorage){
+UserService.$injector = ['$http', 'CONFIG', '$rootScope', '$log', '$q'];
+function UserService($http, CONFIG, $rootScope, $log, $q){
 
     var service = {
 
+        /**
+         * This method will return the user profile data if he is authenticated, null otherwise.
+         * @returns {*}
+         */
         me: function(){
             return $http.get(CONFIG.route.me)
-                .success(function (data, status, headers, config) {
-                    $log.debug('UserService -> me -> data : ', data);
-                    return data;
+                .then(function (data) {
+                    $log.debug('UserService -> me -> success: ', data.data);
+                    return data.data;
                 })
-                .error(function (data, status, headers, config) {
-                    $log.debug(data);
+                .catch(function (err) {
+                    // Case of unauthorized we return null as data
+                    // Otherwise just throw back error
+                    if(err.status == 401){
+                        return null;
+                    }
+                    throw err;
                 });
         }
 

@@ -11,7 +11,7 @@ function routes($stateProvider, $urlRouterProvider) {
 
     $stateProvider
 
-        // Main view
+        // Main and default view
         // Template based on a sidebar and custom content in the middle
         .state('app', {
             url: "/app",
