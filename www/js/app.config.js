@@ -19,22 +19,32 @@ angular.module('starter')
         SERVER_ACCESS_ERROR: 'We are having troubles contacting our server!',
         UNEXPECTED_ERROR: 'An unexpected error happened!'
     })
-    
-    .value('user', {
-        authenticated: false // pass to true to bypass login
+
+    .constant('MAPPERS', {
+        RESPONSE_ACCESS_TOKEN: 'token'
+        
     })
     
+    .config(configureUser)
     .config(configureCONFIG)
     .config(configureInterceptorsfunction)
     .config(configureIonic);
 
 
+function configureUser($provide) {
+    $provide.constant('user', {
+        authenticated: false // pass to true to bypass login
+    });
+}
+
 function configureCONFIG($provide) {
-    var apiUrl = 'https://localhost:1340';
+    var apiUrl = 'https://192.168.1.24:1340'; // maxime desktop
+    //var apiUrl = 'https://yourip:1340'; // define your own
     var config = {
         apiUrl: apiUrl,
         route: {
             login: apiUrl + '/auth/login',
+            register: apiUrl + '/auth/register',
             facebookAuth: apiUrl + '/auth/facebook',
             me: apiUrl + '/helper/me'
         },

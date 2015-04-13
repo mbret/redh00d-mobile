@@ -6,26 +6,30 @@
     <form>
       <div class="list">
 
-        <label class="item item-input">
-          <span class="input-label">Email</span>
-          <input type="text" ng-model="data.email">
-        </label>
-
-        <label class="item item-input">
-          <span class="input-label">Password</span>
-          <input type="password" ng-model="data.password">
-        </label>
+          <!--Inset form-->
+          <div class="list list-inset">
+              <label class="item item-input">
+                  <i class="icon ion-search placeholder-icon"></i>
+                  <input type="text" placeholder="Email" ng-model="data.email">
+              </label>
+              <label class="item item-input">
+                  <i class="icon ion-search placeholder-icon"></i>
+                  <input type="password" placeholder="Password" ng-model="data.password">
+              </label>
+          </div>
+            
+          <div class="padding">
+              <button class="button button-block button-positive" ng-click="doLogin();">Log in</button>
+              <button class="button button-block button-balanced" ng-click="doRegister();">Register</button>
+          </div>
 
         <label class="item">
-            <button class="button button-block button-positive" ng-click="doLogin();">Log in</button>
-            <button class="button button-block button-balanced" ng-click="doRegister();">Register</button>
+            <button class="button btn-auth button-block btn-facebook button-positive large" ng-click="doLogin('facebook');">Sign in with <b>Facebook</b></button>
         </label>
-          <label class="item">
-              <button class="button btn-auth button-block btn-facebook button-positive large" ng-click="doLogin('facebook');">
-                  Sign in with <b>Facebook</b>
-              </button>
-          </label>
+          
       </div>
+
     </form>
+
   </ion-content>
 </ion-view>

@@ -21,3 +21,8 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+// Include special ionic fix. Used to fix ionic though releases if something is broken
+@import "ionic-fix";
+
+// Include general style for app
+@import "style";

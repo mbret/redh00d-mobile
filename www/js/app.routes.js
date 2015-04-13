@@ -24,6 +24,7 @@ function routes($stateProvider, $urlRouterProvider) {
             url: "/login",
             templateUrl: "templates/login.html",
             controller: 'LoginCtrl',
+            controllerAs: 'loginCtrl',
             data: {
                 title: 'Login'
             }
@@ -31,7 +32,7 @@ function routes($stateProvider, $urlRouterProvider) {
 
         .state('logout', {
             url: '/logout',
-            templateUrl: "",
+            templateUrl: "<ion-nav-view></ion-nav-view>",
             controller: 'LogoutCtrl'
         })
         

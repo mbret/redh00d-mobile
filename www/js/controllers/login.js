@@ -16,8 +16,7 @@ function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicL
      * @param provider
      */
     $scope.doLogin = function(provider) {
-        console.log(provider);
-        
+
         // Log in with provider (Facebook, Google, etc)
         if(provider){
             var options = {
@@ -54,11 +53,11 @@ function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicL
         // Login with credentials
         else{
             AuthenticationService.login($scope.data.email, $scope.data.password)
-                .then(function(user){
+                .then(function(data){
                     angular.extend(user, data);
                     $state.go(CONFIG.state.home);
                 })
-                .catch(function (err) {
+                .catch(function(err) {
                     // Bad request
                     if(err && err.status && err.status === 400){
                         popupService.badCredentials();
@@ -66,6 +65,24 @@ function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicL
                 });
         }
 
+    };
+
+    /**
+     * Perform a registration
+     */
+    $scope.doRegister = function(){
+        AuthenticationService.register($scope.data.email, $scope.data.password)
+            .then(function(data){
+                console.log('HOURRA');
+
+            })
+            .catch(function(err){
+                // Bad request
+                if(err && err.status && err.status === 400){
+                    popupService.badCredentials();
+                }
+                
+            });
     };
     
 }

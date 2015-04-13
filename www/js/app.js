@@ -82,6 +82,7 @@ function run($ionicPlatform, $rootScope, $state, user, UserService, CONFIG, $log
                     }
                     else{
                         $log.debug('app -> run -> user could not be authenticated, login needed');
+                        UserService.cleanLocalTraces(); // clean everything about a possible previous user (like tokens, ...)
                         $state.go(CONFIG.state.login);
                         // ...
                     }

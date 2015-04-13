@@ -1,0 +1,4 @@
+// Add a fix for popup that came with 1.0rc which show scrollbar on popup with android / webkit
+.popup .popup-body {
+    overflow: hidden !important;
+}

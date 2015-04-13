@@ -17,8 +17,8 @@ function popupService($ionicPopup){
         
         badCredentials: function(){
             $ionicPopup.alert({
-                title: 'Error',
-                template: 'Invalid crendentials!'
+                title: 'Incorrect password',
+                template: 'The password you entered is incorrect. Please try again.'
             });
         },
         

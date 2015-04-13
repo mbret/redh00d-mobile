@@ -3,8 +3,8 @@
 angular.module('starter.services')
     .factory('UserService', UserService);
 
-UserService.$injector = ['$http', 'CONFIG', '$rootScope', '$log', '$q'];
-function UserService($http, CONFIG, $rootScope, $log, $q){
+UserService.$injector = ['$http', 'CONFIG', '$rootScope', '$log', '$q', '$localStorage'];
+function UserService($http, CONFIG, $rootScope, $log, $q, $localStorage){
 
     var service = {
 
@@ -26,6 +26,11 @@ function UserService($http, CONFIG, $rootScope, $log, $q){
                     }
                     throw err;
                 });
+        },
+
+        cleanLocalTraces: function(){
+            $localStorage.delete('access_token');
+            $log.debug('UserService.cleanLocalTraces -> user traces deleted');
         }
 
     };
