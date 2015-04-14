@@ -2,7 +2,7 @@
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-rc.3
+ * Ionic, v1.0.0-rc.3-nightly-1212
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -18,7 +18,7 @@
 // build processes may have already created an ionic obj
 window.ionic = window.ionic || {};
 window.ionic.views = {};
-window.ionic.version = '1.0.0-rc.3';
+window.ionic.version = '1.0.0-rc.3-nightly-1212';
 
 (function (ionic) {
 
@@ -7953,6 +7953,11 @@ ionic.views.Slider = ionic.views.View.inherit({
 
     function setup() {
 
+      // do not setup if the container has no width
+      if (!container.offsetWidth) {
+        return;
+      }
+
       // cache slides
       slides = element.children;
       length = slides.length;
@@ -8004,17 +8009,17 @@ ionic.views.Slider = ionic.views.View.inherit({
       options.slidesChanged && options.slidesChanged();
     }
 
-    function prev() {
+    function prev(slideSpeed) {
 
-      if (options.continuous) slide(index-1);
-      else if (index) slide(index-1);
+      if (options.continuous) slide(index-1, slideSpeed);
+      else if (index) slide(index-1, slideSpeed);
 
     }
 
-    function next() {
+    function next(slideSpeed) {
 
-      if (options.continuous) slide(index+1);
-      else if (index < slides.length - 1) slide(index+1);
+      if (options.continuous) slide(index+1, slideSpeed);
+      else if (index < slides.length - 1) slide(index+1, slideSpeed);
 
     }
 
@@ -8455,17 +8460,8 @@ ionic.views.Slider = ionic.views.View.inherit({
       element.style.width = '';
       element.style.left = '';
 
-      // reset slides
-      var pos = slides.length;
-      while(pos--) {
-
-        var slide = slides[pos];
-        slide.style.width = '';
-        slide.style.left = '';
-
-        if (browser.transitions) translate(pos, 0, 0);
-
-      }
+      // reset slides so no refs are held on to
+      slides && (slides.length = 0);
 
       // removed event listeners
       if (browser.addEventListener) {

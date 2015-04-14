@@ -9,7 +9,7 @@
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-rc.3
+ * Ionic, v1.0.0-rc.3-nightly-1212
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -25,7 +25,7 @@
 // build processes may have already created an ionic obj
 window.ionic = window.ionic || {};
 window.ionic.views = {};
-window.ionic.version = '1.0.0-rc.3';
+window.ionic.version = '1.0.0-rc.3-nightly-1212';
 
 (function (ionic) {
 
@@ -7960,6 +7960,11 @@ ionic.views.Slider = ionic.views.View.inherit({
 
     function setup() {
 
+      // do not setup if the container has no width
+      if (!container.offsetWidth) {
+        return;
+      }
+
       // cache slides
       slides = element.children;
       length = slides.length;
@@ -8011,17 +8016,17 @@ ionic.views.Slider = ionic.views.View.inherit({
       options.slidesChanged && options.slidesChanged();
     }
 
-    function prev() {
+    function prev(slideSpeed) {
 
-      if (options.continuous) slide(index-1);
-      else if (index) slide(index-1);
+      if (options.continuous) slide(index-1, slideSpeed);
+      else if (index) slide(index-1, slideSpeed);
 
     }
 
-    function next() {
+    function next(slideSpeed) {
 
-      if (options.continuous) slide(index+1);
-      else if (index < slides.length - 1) slide(index+1);
+      if (options.continuous) slide(index+1, slideSpeed);
+      else if (index < slides.length - 1) slide(index+1, slideSpeed);
 
     }
 
@@ -8462,17 +8467,8 @@ ionic.views.Slider = ionic.views.View.inherit({
       element.style.width = '';
       element.style.left = '';
 
-      // reset slides
-      var pos = slides.length;
-      while(pos--) {
-
-        var slide = slides[pos];
-        slide.style.width = '';
-        slide.style.left = '';
-
-        if (browser.transitions) translate(pos, 0, 0);
-
-      }
+      // reset slides so no refs are held on to
+      slides && (slides.length = 0);
 
       // removed event listeners
       if (browser.addEventListener) {
@@ -41905,7 +41901,7 @@ angular.module('ui.router.state')
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-rc.3
+ * Ionic, v1.0.0-rc.3-nightly-1212
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -42267,11 +42263,12 @@ jqLite.prototype.removeClass = function(cssClasses) {
  */
 IonicModule
 .factory('$ionicBackdrop', [
-  '$document', '$timeout',
-function($document, $timeout) {
+  '$document', '$timeout', '$$rAF', '$$q',
+function($document, $timeout, $$rAF, $$q) {
 
   var el = jqLite('<div class="backdrop">');
   var backdropHolds = 0;
+  var backdropIsActive = false;
 
   $document[0].body.appendChild(el[0]);
 
@@ -42297,20 +42294,24 @@ function($document, $timeout) {
   };
 
   function retain() {
-    if ((++backdropHolds) === 1) {
+    backdropHolds++;
+    if (backdropHolds === 1) {
       el.addClass('visible');
-      ionic.requestAnimationFrame(function() {
-        backdropHolds && el.addClass('active');
+      $$rAF(function() {
+        // If we're still at >0 backdropHolds after async...
+        if (backdropHolds >= 1) el.addClass('active');
       });
     }
   }
   function release() {
-    if ((--backdropHolds) === 0) {
+    if (backdropHolds === 1) {
       el.removeClass('active');
       $timeout(function() {
-        !backdropHolds && el.removeClass('visible');
+        // If we're still at 0 backdropHolds after async...
+        if (backdropHolds === 0) el.removeClass('visible');
       }, 400, false);
     }
+    backdropHolds = Math.max(0, backdropHolds - 1);
   }
 
   function getElement() {
@@ -42494,7 +42495,7 @@ function($document, $ionicBody, $timeout) {
     show: function(autoExpire) {
       pendingShow = true;
       $timeout.cancel(fallbackTimer);
-      fallbackTimer = $timeout(this.hide, autoExpire || 310);
+      fallbackTimer = $timeout(this.hide, autoExpire || 310, false);
       addClickBlock();
     },
     hide: function() {
@@ -43160,8 +43161,10 @@ function($rootScope, $state, $location, $window, $timeout, $ionicViewSwitcher, $
      * This both removes the view element from the DOM, and destroy it's scope.
      */
     clearCache: function() {
-      $ionicNavViewDelegate._instances.forEach(function(instance) {
-        instance.clearCache();
+      $timeout(function() {
+        $ionicNavViewDelegate._instances.forEach(function(instance) {
+          instance.clearCache();
+        });
       });
     },
 
@@ -44255,10 +44258,11 @@ IonicModule
   '$timeout',
   '$ionicPlatform',
   '$ionicTemplateLoader',
-  '$q',
+  '$$q',
   '$log',
   '$ionicClickBlock',
-function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTemplateLoader, $q, $log, $ionicClickBlock) {
+  '$window',
+function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTemplateLoader, $$q, $log, $ionicClickBlock, $window) {
 
   /**
    * @ngdoc controller
@@ -44307,15 +44311,16 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
 
       if (self.scope.$$destroyed) {
         $log.error('Cannot call ' +  self.viewType + '.show() after remove(). Please create a new ' +  self.viewType + ' instance.');
-        return;
+        return $$q.when();
       }
 
       var modalEl = jqLite(self.modalEl);
 
       self.el.classList.remove('hide');
       $timeout(function() {
+        if (!self._isShown) return;
         $ionicBody.addClass(self.viewType + '-open');
-      }, 400);
+      }, 400, false);
 
       if (!self.el.parentElement) {
         modalEl.addClass(self.animation);
@@ -44330,11 +44335,13 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
       if (target && self.positionView) {
         self.positionView(target, modalEl);
         // set up a listener for in case the window size changes
-        ionic.on('resize',function() {
-          ionic.off('resize',null,window);
-          self.positionView(target,modalEl);
-        },window);
+
+        self._onWindowResize = function(ev) {
+          if (self._isShown) self.positionView(target,modalEl);
+        };
+        $window.addEventListener('resize', self._onWindowResize);
       }
+
 
       modalEl.addClass('ng-enter active')
              .removeClass('ng-leave ng-leave-active');
@@ -44348,6 +44355,7 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
       ionic.views.Modal.prototype.show.call(self);
 
       $timeout(function() {
+        if (!self._isShown) return;
         modalEl.addClass('ng-enter-active');
         ionic.trigger('resize');
         self.scope.$parent && self.scope.$parent.$broadcast(self.viewType + '.shown', self);
@@ -44356,6 +44364,7 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
       }, 20);
 
       return $timeout(function() {
+        if (!self._isShown) return;
         //After animating in, allow hide on backdrop click
         self.$el.on('click', function(e) {
           if (self.backdropClickToClose && e.target === self.el) {
@@ -44383,9 +44392,10 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
       modalEl.addClass('ng-leave');
 
       $timeout(function() {
+        if (self._isShown) return;
         modalEl.addClass('ng-leave-active')
                .removeClass('ng-enter ng-enter-active active');
-      }, 20);
+      }, 20, false);
 
       self.$el.off('click');
       self._isShown = false;
@@ -44396,7 +44406,7 @@ function($rootScope, $ionicBody, $compile, $timeout, $ionicPlatform, $ionicTempl
 
       // clean up event listeners
       if (self.positionView) {
-        ionic.off('resize',null,window);
+        $window.addEventListener('resize', self._onWindowResize);
       }
 
       return $timeout(function() {
@@ -45106,6 +45116,7 @@ function($ionicTemplateLoader, $ionicBackdrop, $q, $timeout, $rootScope, $ionicB
     stackPushDelay: 75
   };
   var popupStack = [];
+
   var $ionicPopup = {
     /**
      * @ngdoc method
@@ -45275,8 +45286,7 @@ function($ionicTemplateLoader, $ionicBackdrop, $q, $timeout, $rootScope, $ionicB
       $ionicTemplateLoader.load(options.templateUrl) :
       $q.when(options.template || options.content || '');
 
-    return $q.all([popupPromise, contentPromise])
-    .then(function(results) {
+    return $q.all([popupPromise, contentPromise]).then(function(results) {
       var self = results[0];
       var content = results[1];
       var responseDeferred = $q.defer();
@@ -45309,7 +45319,7 @@ function($ionicTemplateLoader, $ionicBackdrop, $q, $timeout, $rootScope, $ionicB
       });
 
       self.show = function() {
-        if (self.isShown) return;
+        if (self.isShown || self.removed) return;
 
         self.isShown = true;
         ionic.requestAnimationFrame(function() {
@@ -45321,6 +45331,7 @@ function($ionicTemplateLoader, $ionicBackdrop, $q, $timeout, $rootScope, $ionicB
           focusInput(self.element);
         });
       };
+
       self.hide = function(callback) {
         callback = callback || noop;
         if (!self.isShown) return callback();
@@ -45330,6 +45341,7 @@ function($ionicTemplateLoader, $ionicBackdrop, $q, $timeout, $rootScope, $ionicB
         self.element.addClass('popup-hidden');
         $timeout(callback, 250);
       };
+
       self.remove = function() {
         if (self.removed) return;
 
@@ -45346,74 +45358,79 @@ function($ionicTemplateLoader, $ionicBackdrop, $q, $timeout, $rootScope, $ionicB
   }
 
   function onHardwareBackButton(e) {
-    popupStack[0] && popupStack[0].responseDeferred.resolve();
+    var last = popupStack[popupStack.length - 1];
+    last && last.responseDeferred.resolve();
   }
 
   function showPopup(options) {
+    var resultDeferred;
     var popupPromise = $ionicPopup._createPopup(options);
-    var previousPopup = popupStack[0];
 
-    if (previousPopup) {
-      previousPopup.hide();
+    if (popupStack.length > 0) {
+      popupStack[popupStack.length - 1].hide();
+      resultDeferred = $timeout(doShowPopup, config.stackPushDelay);
+    } else {
+      //Add popup-open & backdrop if this is first popup
+      $ionicBody.addClass('popup-open');
+      $ionicBackdrop.retain();
+      //only show the backdrop on the first popup
+      $ionicPopup._backButtonActionDone = $ionicPlatform.registerBackButtonAction(
+        onHardwareBackButton,
+        PLATFORM_BACK_BUTTON_PRIORITY_POPUP
+      );
+      resultDeferred = doShowPopup();
     }
 
-    var resultPromise = $timeout(noop, previousPopup ? config.stackPushDelay : 0)
-    .then(function() { return popupPromise; })
-    .then(function(popup) {
-      if (!previousPopup) {
-        //Add popup-open & backdrop if this is first popup
-        $ionicBody.addClass('popup-open');
-        $ionicBackdrop.retain();
-        //only show the backdrop on the first popup
-        $ionicPopup._backButtonActionDone = $ionicPlatform.registerBackButtonAction(
-          onHardwareBackButton,
-          PLATFORM_BACK_BUTTON_PRIORITY_POPUP
-        );
-      }
-      popupStack.unshift(popup);
-      popup.show();
-
-      //DEPRECATED: notify the promise with an object with a close method
-      popup.responseDeferred.notify({
-        close: resultPromise.close
-      });
-
-      return popup.responseDeferred.promise.then(function(result) {
-        var index = popupStack.indexOf(popup);
-        if (index !== -1) {
-          popupStack.splice(index, 1);
-        }
-        popup.remove();
-
-        var previousPopup = popupStack[0];
-        if (previousPopup) {
-          previousPopup.show();
-        } else {
-          //Remove popup-open & backdrop if this is last popup
-          $timeout(function() {
-            // wait to remove this due to a 300ms delay native
-            // click which would trigging whatever was underneath this
-            $ionicBody.removeClass('popup-open');
-          }, 400);
-          $timeout(function() {
-            $ionicBackdrop.release();
-          }, config.stackPushDelay || 0);
-          ($ionicPopup._backButtonActionDone || noop)();
-        }
-        return result;
-      });
-    });
-
-    function close(result) {
+    resultDeferred.close = function popupClose(result) {
       popupPromise.then(function(popup) {
-        if (!popup.removed) {
-          popup.responseDeferred.resolve(result);
-        }
+        if (!popup.removed) popup.responseDeferred.resolve(result);
       });
-    }
-    resultPromise.close = close;
+    };
 
-    return resultPromise;
+    return resultDeferred;
+
+    function doShowPopup() {
+      return popupPromise.then(function(popup) {
+        popupStack.push(popup);
+        popup.show();
+
+        //DEPRECATED: notify the promise with an object with a close method
+        popup.responseDeferred.notify({
+          close: resultDeferred.close
+        });
+
+        return popup.responseDeferred.promise.then(function(result) {
+          var index = popupStack.indexOf(popup);
+          if (index !== -1) {
+            popupStack.splice(index, 1);
+          }
+          popup.remove();
+
+          if (popupStack.length > 0) {
+            popupStack[popupStack.length - 1].show();
+          } else {
+            //Remove popup-open & backdrop if this is last popup
+            $timeout(function() {
+              // wait to remove this due to a 300ms delay native
+              // click which would trigging whatever was underneath this
+              if (!popupStack.length) {
+                $ionicBody.removeClass('popup-open');
+              }
+            }, 400, false);
+            $timeout(function() {
+              if (!popupStack.length) $ionicBackdrop.release();
+            }, config.stackPushDelay || 0, false);
+
+            ($ionicPopup._backButtonActionDone || noop)();
+          }
+
+          return result;
+        });
+
+      });
+
+    }
+
   }
 
   function focusInput(element) {
@@ -45901,7 +45918,7 @@ IonicModule
    * @ngdoc method
    * @name $ionicSlideBoxDelegate#slide
    * @param {number} to The index to slide to.
-   * @param {number=} speed The number of milliseconds for the change to take.
+   * @param {number=} speed The number of milliseconds the change should take.
    */
   'slide',
   'select',
@@ -45915,12 +45932,14 @@ IonicModule
   /**
    * @ngdoc method
    * @name $ionicSlideBoxDelegate#previous
+   * @param {number=} speed The number of milliseconds the change should take.
    * @description Go to the previous slide. Wraps around if at the beginning.
    */
   'previous',
   /**
    * @ngdoc method
    * @name $ionicSlideBoxDelegate#next
+   * @param {number=} speed The number of milliseconds the change should take.
    * @description Go to the next slide. Wraps around if at the end.
    */
   'next',
@@ -48828,7 +48847,7 @@ function($scope,
   };
 
   self.resize = function() {
-    return $timeout(resize).then(function() {
+    return $timeout(resize, 0, false).then(function() {
       $element && $element.triggerHandler('scroll.resize');
     });
   };
@@ -50667,8 +50686,14 @@ function RepeatManagerFactory($rootScope, $window, $$rAF) {
     var isLayoutReady = false;
     var isDataReady = false;
     this.refreshLayout = function(itemsAfterRepeater) {
-      estimatedHeight = heightGetter(0, data[0]);
-      estimatedWidth = widthGetter(0, data[0]);
+      if (data.length) {
+        estimatedHeight = heightGetter(0, data[0]);
+        estimatedWidth = widthGetter(0, data[0]);
+      } else {
+        // If we don't have any data in our array, just guess.
+        estimatedHeight = 100;
+        estimatedWidth = 100;
+      }
 
       // Get the size of every element AFTER the repeater. We have to get the margin before and
       // after the first/last element to fix a browser bug with getComputedStyle() not counting
@@ -51374,8 +51399,7 @@ function($timeout, $controller, $ionicBind, $ionicConfig) {
  * For a complete side menu example, see the
  * {@link ionic.directive:ionSideMenus} documentation.
  */
-IonicModule
-.directive('exposeAsideWhen', ['$window', function($window) {
+IonicModule.directive('exposeAsideWhen', ['$window', '$timeout', function($window, $timeout) {
   return {
     restrict: 'A',
     require: '^ionSideMenus',
@@ -51396,7 +51420,7 @@ IonicModule
         $scope.$apply(checkAsideExpose);
       }, 300, false);
 
-      checkAsideExpose();
+      $scope.$evalAsync(checkAsideExpose);
 
       ionic.on('resize', onResize, $window);
 
@@ -54229,7 +54253,10 @@ function($timeout, $compile, $ionicSlideBoxDelegate, $ionicHistory, $ionicScroll
           return $ionicHistory.isActiveScope($scope);
         }
       );
-      $scope.$on('$destroy', deregisterInstance);
+      $scope.$on('$destroy', function() {
+        deregisterInstance();
+        slider.kill();
+      });
 
       this.slidesCount = function() {
         return slider.slidesCount();
@@ -54802,7 +54829,7 @@ IonicModule
  *
  * For iOS, tabs will appear at the bottom of the screen. For Android, tabs will be at the top
  * of the screen, below the nav-bar. This follows each OS's design specification, but can be
- * configured with the [$ionicConfigProvider](docs/api/provider/$ionicConfigProvider/).
+ * configured with the {@link ionic.provider:$ionicConfigProvider}.
  *
  * See the {@link ionic.directive:ionTab} directive's documentation for more details on
  * individual tabs.
@@ -55014,9 +55041,9 @@ function($timeout, $ionicConfig) {
  *
  * @description
  * A container for view content and any navigational and header bar information. When a view
- * enters and exists its parent {@link ionic.directive:ionNavView}, the view also emits view
- * information, such as its title, whether the back button should show or not, whether the
- * corresponding {@link ionic.directive:ionNavBar} should show or not, which transition the view
+ * enters and exits its parent {@link ionic.directive:ionNavView}, the view also emits view
+ * information, such as its title, whether the back button should be displayed or not, whether the
+ * corresponding {@link ionic.directive:ionNavBar} should be displayed or not, which transition the view
  * should use to animate, and which direction to animate.
  *
  * *Views are cached to improve performance.* When a view is navigated away from, its element is
