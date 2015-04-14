@@ -1,6 +1,6 @@
 {
   "name": "redhood-mobile",
-  "app_id": "",
+  "app_id": "70e73755",
   "gulpStartupTasks": [
     "sass",
     "watch"

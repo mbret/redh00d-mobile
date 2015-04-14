@@ -20,13 +20,25 @@ function routes($stateProvider, $urlRouterProvider) {
             controller: 'AppCtrl'
         })
 
-        .state('login', {
+        .state('auth', {
+            url: '/auth',
+            abstract: true,
+            templateUrl: "templates/auth/index.html"
+        })
+        .state('auth.login', {
             url: "/login",
-            templateUrl: "templates/login.html",
+            templateUrl: "templates/auth/login.html",
             controller: 'LoginCtrl',
-            controllerAs: 'loginCtrl',
             data: {
                 title: 'Login'
+            }
+        })
+        .state('auth.register', {
+            url: "/register",
+            templateUrl: "templates/auth/register.html",
+            controller: 'RegisterCtrl',
+            data: {
+                title: 'Register'
             }
         })
 

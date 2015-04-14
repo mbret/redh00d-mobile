@@ -67,22 +67,6 @@ function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicL
 
     };
 
-    /**
-     * Perform a registration
-     */
-    $scope.doRegister = function(){
-        AuthenticationService.register($scope.data.email, $scope.data.password)
-            .then(function(data){
-                console.log('HOURRA');
 
-            })
-            .catch(function(err){
-                // Bad request
-                if(err && err.status && err.status === 400){
-                    popupService.badCredentials();
-                }
-                
-            });
-    };
     
 }

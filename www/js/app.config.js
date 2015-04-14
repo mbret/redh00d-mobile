@@ -50,7 +50,8 @@ function configureCONFIG($provide) {
         },
         state: {
             home: 'app.contacts.list',
-            login: 'login'
+            login: 'auth.login',
+            register: 'auth.register'
         }
     };
     $provide.constant('CONFIG', config);

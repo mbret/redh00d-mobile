@@ -26,6 +26,9 @@ function run($ionicPlatform, $rootScope, $state, user, UserService, CONFIG, $log
 
         $ionicLoading.show();
         
+        // Inject some config/constant in views
+        $rootScope.CONFIG = CONFIG;
+        
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
         if (window.cordova && window.cordova.plugins.Keyboard) {
