@@ -39,7 +39,7 @@ function configureUser($provide) {
 
 function configureCONFIG($provide) {
     var apiUrl = 'https://192.168.1.24:1340'; // maxime desktop
-    var apiUrl = 'https://10.42.43.8:1340'; // maxime bourso
+    //var apiUrl = 'https://10.42.43.8:1340'; // maxime bourso
     //var apiUrl = 'https://yourip:1340'; // define your own
     var config = {
         apiUrl: apiUrl,

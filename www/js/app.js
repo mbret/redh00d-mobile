@@ -72,7 +72,7 @@ function run($ionicPlatform, $rootScope, $state, user, UserService, CONFIG, $log
         // Simulate a little timeout for a better app loading effect.
         // We have time to see loading even if app start really fast
         setTimeout(function(){
-            
+
             // Try to get user information if authentication is still valid
             $log.debug('app -> run -> try to authenticate user');
             UserService.me()
@@ -90,11 +90,14 @@ function run($ionicPlatform, $rootScope, $state, user, UserService, CONFIG, $log
                         // ...
                     }
                 })
+                .catch(function(err){
+                    $state.go(CONFIG.state.login);
+                })
                 .finally(function(){
                     // At this point the app is ready, there are no more critical process to run before user can use app.
                     $rootScope.$emit(EVENTS.APP_READY); // firing an event upwards
                 });
-            
+
         }, 1000);
 
     });

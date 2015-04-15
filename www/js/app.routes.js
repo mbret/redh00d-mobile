@@ -7,10 +7,15 @@ function routes($stateProvider, $urlRouterProvider) {
 
     // if none of the above states are matched, use this as the fallback
     // READ IT : when app is launching this route is called and is then viewed for a second while application take control
-    $urlRouterProvider.otherwise('auth/login');
+    $urlRouterProvider.otherwise('/auth/login');
 
     $stateProvider
 
+        .state('blank',{
+            url: '/blank',
+            template: ''
+        })
+        
         // Main and default view
         // Template based on a sidebar and custom content in the middle
         .state('app', {

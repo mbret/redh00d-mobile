@@ -20,11 +20,10 @@ function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicL
      */
     $scope.doLogin = function(form, provider) {
 
-        console.log(form);
         if(form.$valid === false){
             popupService.badForm();
         }
-        if(form.$valid){
+        else{
             // Log in with provider (Facebook, Google, etc)
             if(provider){
                 var options = {
