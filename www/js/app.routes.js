@@ -7,7 +7,7 @@ function routes($stateProvider, $urlRouterProvider) {
 
     // if none of the above states are matched, use this as the fallback
     // READ IT : when app is launching this route is called and is then viewed for a second while application take control
-    $urlRouterProvider.otherwise('/login');
+    $urlRouterProvider.otherwise('auth/login');
 
     $stateProvider
 
@@ -48,16 +48,6 @@ function routes($stateProvider, $urlRouterProvider) {
             controller: 'LogoutCtrl'
         })
         
-        // Event list
-        //.state('app.events', {
-        //    url: "/events",
-        //    views: {
-        //        'menuContent': {
-        //            templateUrl: "templates/events.html",
-        //            controller: 'EventsCtrl'
-        //        }
-        //    }
-        //})
 
         // Contacts list
         .state('app.contacts', {
@@ -85,32 +75,5 @@ function routes($stateProvider, $urlRouterProvider) {
             }
         })
 
-        //.state('app.search', {
-        //    url: "/search",
-        //    views: {
-        //        'menuContent': {
-        //            templateUrl: "templates/search.html"
-        //        }
-        //    }
-        //})
-        //
-        //.state('app.browse', {
-        //    url: "/browse",
-        //    views: {
-        //        'menuContent': {
-        //            templateUrl: "templates/browse.html"
-        //        }
-        //    }
-        //})
-        //
-        //.state('app.single', {
-        //    url: "/playlists/:playlistId",
-        //    views: {
-        //        'menuContent': {
-        //            templateUrl: "templates/playlist.html",
-        //            controller: 'PlaylistCtrl'
-        //        }
-        //    }
-        //});
 
 }

@@ -1,23 +1,26 @@
 <ion-view view-title="Login" >
   <ion-content class="padding">
-    <form >
+    <form name="loginForm" novalidate ng-submit="doLogin(loginForm)">
       <div class="list">
 
           <!--Inset form-->
           <div class="list list-inset">
-              <label class="item item-input">
+
+              <label class="item item-input" ng-class="{ 'has-error' : loginForm.email.$invalid}">
                   <i class="icon ion-search placeholder-icon"></i>
-                  <input type="text" placeholder="Email" ng-model="data.email">
+                  <input type="email" placeholder="Email" name="email" ng-model="data.email" required>
               </label>
+
               <label class="item item-input">
                   <i class="icon ion-search placeholder-icon"></i>
-                  <input type="password" placeholder="Password" ng-model="data.password">
+                  <input type="password" placeholder="Password" ng-model="data.password" required>
               </label>
           </div>
             
           <div class="padding">
-              <button class="button button-block button-positive" ng-click="doLogin();">Log in</button>
-              <button class="button btn-auth button-block btn-facebook button-positive large" ng-click="doLogin('facebook');">Sign in with <b>Facebook</b></button>
+              <!--<button class="button button-block" type="submit">Submit</button>-->
+              <button class="button button-block button-positive" ng-click="doLogin(loginForm);">Log in</button>
+              <button class="button btn-auth button-block btn-facebook button-positive large" ng-click="doLogin(loginForm, 'facebook');">Sign in with <b>Facebook</b></button>
           </div>
 
       </div>
@@ -28,7 +31,7 @@
           Or if you don't have an account <a ui-sref="{{CONFIG.state.register}}" class="positive">Sign up!</a>
       </div>
       <div class="text-center">
-          <a ui-sref="forgotpassword" class="positive">I don't remember my credentials</a>
+          <a ui-sref="{{CONFIG.state.forgotpassword}}" class="positive">I don't remember my credentials</a>
       </div>
       
   </ion-content>

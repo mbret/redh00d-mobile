@@ -32,6 +32,13 @@ function popupService($ionicPopup){
                 template: 'The password you entered is incorrect. Please try again.'
             });
         },
+
+        badForm: function(){
+            $ionicPopup.alert({
+                title: 'Form invalid',
+                template: 'Please review your form, it contains error'
+            })
+        },
         
         loggedOut: function(){
             $ionicPopup.alert({
