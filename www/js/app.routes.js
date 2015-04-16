@@ -13,7 +13,7 @@ function routes($stateProvider, $urlRouterProvider) {
 
         .state('blank',{
             url: '/blank',
-            template: ''
+            template: 'If you are here, it means that the url provided doesn\'t exist and I love you'
         })
         
         // Main and default view

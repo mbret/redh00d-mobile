@@ -73,30 +73,37 @@ function run($ionicPlatform, $rootScope, $state, user, UserService, CONFIG, $log
         // We have time to see loading even if app start really fast
         setTimeout(function(){
 
-            // Try to get user information if authentication is still valid
-            $log.debug('app -> run -> try to authenticate user');
-            UserService.me()
-                .then(function(data){
-                    if(data){
-                        $log.debug('app -> run -> user automatically authenticated, login bypassed');
-                        angular.extend(user, data);
-                        $state.go(CONFIG.state.home);
-                        // ...
-                    }
-                    else{
-                        $log.debug('app -> run -> user could not be authenticated, login needed');
-                        UserService.cleanLocalTraces(); // clean everything about a possible previous user (like tokens, ...)
+            if(CONFIG.bypassLogin === true){
+                $state.go(CONFIG.state.home);
+                $rootScope.$emit(EVENTS.APP_READY);
+            }
+            else{
+                // Try to get user information if authentication is still valid
+                $log.debug('app -> run -> try to authenticate user');
+                UserService.me()
+                    .then(function(data){
+                        if(data){
+                            $log.debug('app -> run -> user automatically authenticated, login bypassed');
+                            angular.extend(user, data);
+                            $state.go(CONFIG.state.home);
+                            // ...
+                        }
+                        else{
+                            $log.debug('app -> run -> user could not be authenticated, login needed');
+                            UserService.cleanLocalTraces(); // clean everything about a possible previous user (like tokens, ...)
+                            $state.go(CONFIG.state.login);
+                            // ...
+                        }
+                    })
+                    .catch(function(err){
                         $state.go(CONFIG.state.login);
-                        // ...
-                    }
-                })
-                .catch(function(err){
-                    $state.go(CONFIG.state.login);
-                })
-                .finally(function(){
-                    // At this point the app is ready, there are no more critical process to run before user can use app.
-                    $rootScope.$emit(EVENTS.APP_READY); // firing an event upwards
-                });
+                    })
+                    .finally(function(){
+                        // At this point the app is ready, there are no more critical process to run before user can use app.
+                        $rootScope.$emit(EVENTS.APP_READY); // firing an event upwards
+                    });
+            }
+
 
         }, 1000);
 
