@@ -7,11 +7,16 @@ function routes($stateProvider, $urlRouterProvider) {
 
     // if none of the above states are matched, use this as the fallback
     // READ IT : when app is launching this route is called and is then viewed for a second while application take control
-    $urlRouterProvider.otherwise('/login');
+    $urlRouterProvider.otherwise('/auth/login');
 
     $stateProvider
 
-        // Main view
+        .state('blank',{
+            url: '/blank',
+            template: 'If you are here, it means that the url provided doesn\'t exist and I love you'
+        })
+        
+        // Main and default view
         // Template based on a sidebar and custom content in the middle
         .state('app', {
             url: "/app",
@@ -20,31 +25,34 @@ function routes($stateProvider, $urlRouterProvider) {
             controller: 'AppCtrl'
         })
 
-        .state('login', {
+        .state('auth', {
+            url: '/auth',
+            abstract: true,
+            templateUrl: "templates/auth/index.html"
+        })
+        .state('auth.login', {
             url: "/login",
-            templateUrl: "templates/login.html",
+            templateUrl: "templates/auth/login.html",
             controller: 'LoginCtrl',
             data: {
                 title: 'Login'
             }
         })
+        .state('auth.register', {
+            url: "/register",
+            templateUrl: "templates/auth/register.html",
+            controller: 'RegisterCtrl',
+            data: {
+                title: 'Register'
+            }
+        })
 
         .state('logout', {
             url: '/logout',
-            templateUrl: "",
+            templateUrl: "<ion-nav-view></ion-nav-view>",
             controller: 'LogoutCtrl'
         })
         
-        // Event list
-        //.state('app.events', {
-        //    url: "/events",
-        //    views: {
-        //        'menuContent': {
-        //            templateUrl: "templates/events.html",
-        //            controller: 'EventsCtrl'
-        //        }
-        //    }
-        //})
 
         // Contacts list
         .state('app.contacts', {
@@ -78,32 +86,5 @@ function routes($stateProvider, $urlRouterProvider) {
         })
 
 
-        //.state('app.search', {
-        //    url: "/search",
-        //    views: {
-        //        'menuContent': {
-        //            templateUrl: "templates/search.html"
-        //        }
-        //    }
-        //})
-        //
-        //.state('app.browse', {
-        //    url: "/browse",
-        //    views: {
-        //        'menuContent': {
-        //            templateUrl: "templates/browse.html"
-        //        }
-        //    }
-        //})
-        //
-        //.state('app.single', {
-        //    url: "/playlists/:playlistId",
-        //    views: {
-        //        'menuContent': {
-        //            templateUrl: "templates/playlist.html",
-        //            controller: 'PlaylistCtrl'
-        //        }
-        //    }
-        //});
 
 }

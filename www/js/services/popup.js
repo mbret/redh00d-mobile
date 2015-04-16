@@ -4,6 +4,17 @@ angular.module('starter.services')
     .factory('popupService', popupService);
 
 popupService.$injector = ['popupService'];
+
+/**
+ * This service is a wrapper of popup. Use it instead of $ionicPopup or other as it may centralize the app logic
+ * in one place and use the same way for all the app. Useful example:
+ *  - using several libraries can be wrapped here
+ *  - add condition relative to platform
+ *  - etc
+ *
+ * @param $ionicPopup
+ * @returns {{error: Function, badCredentials: Function, loggedOut: Function}}
+ */
 function popupService($ionicPopup){
 
     return {
@@ -17,9 +28,16 @@ function popupService($ionicPopup){
         
         badCredentials: function(){
             $ionicPopup.alert({
-                title: 'Error',
-                template: 'Invalid crendentials!'
+                title: 'Incorrect password',
+                template: 'The password you entered is incorrect. Please try again.'
             });
+        },
+
+        badForm: function(){
+            $ionicPopup.alert({
+                title: 'Form invalid',
+                template: 'Please review your form, it contains error'
+            })
         },
         
         loggedOut: function(){

@@ -7,10 +7,22 @@ function RegisterCtrl($scope, $rootScope, $timeout, user, $state, $ionicLoading,
 
     $scope.data = {};
 
-    $scope.doRegister = function() {
+    /**
+     * Perform a registration
+     */
+    $scope.doRegister = function(){
+        AuthenticationService.register($scope.data.email, $scope.data.password)
+            .then(function(data){
+                console.log('HOURRA');
 
-        $state.go('app.events');
+            })
+            .catch(function(err){
+                // Bad request
+                if(err && err.status && err.status === 400){
+                    popupService.badCredentials();
+                }
 
+            });
     };
     
 }

@@ -12,7 +12,7 @@ httpRequestInterceptor.$injector = ['$q','$log', 'CONFIG', '$localStorage'];
  * @param $localStorage
  * @returns {{request: Function}}
  */
-function httpRequestInterceptor($q,$log, CONFIG, $localStorage){
+function httpRequestInterceptor($rootScope,$log, CONFIG, $localStorage, EVENTS){
     return {
         request: function (config) {
 
@@ -26,7 +26,9 @@ function httpRequestInterceptor($q,$log, CONFIG, $localStorage){
                 $log.debug('httpRequestInterceptor -> request -> access_token injected : ' + $localStorage.get('access_token').substring(0, 30) + '****');
                 config.headers.Authorization = 'JWT ' + $localStorage.get('access_token');
             }
-            
+
+            $rootScope.$broadcast(EVENTS.SHOW_LOADING);
+
             return config;
         }
     }

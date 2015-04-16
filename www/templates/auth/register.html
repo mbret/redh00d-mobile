@@ -1,0 +1,28 @@
+<ion-view view-title="Register">
+  <ion-content class="padding">
+    <form ng-submit="doRegister()">
+      <div class="list">
+
+          <!--Inset form-->
+          <div class="list list-inset">
+              <label class="item item-input">
+                  <i class="icon ion-search placeholder-icon"></i>
+                  <input type="text" placeholder="Email" ng-model="data.email">
+              </label>
+              <label class="item item-input">
+                  <i class="icon ion-search placeholder-icon"></i>
+                  <input type="password" placeholder="Password" ng-model="data.password">
+              </label>
+          </div>
+          
+        <label class="item">
+            <button class="button button-block button-balanced" type="submit">Register</button>
+        </label>
+      </div>
+    </form>
+
+      <div class="text-center">
+          Already have an account? <a ui-sref="{{CONFIG.state.login}}" class="positive">Sign in!</a>
+      </div>
+  </ion-content>
+</ion-view>

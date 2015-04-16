@@ -21,8 +21,4 @@ function AppCtrl($scope, $ionicModal, $timeout, $rootScope, $log, $ionicLoading)
     //    $scope.modal.show();
     //};
 
-    $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-        $log.debug('$stateChangeSuccess -> ' + toState.name);
-        $ionicLoading.hide();
-    });
 }
