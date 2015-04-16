@@ -71,6 +71,12 @@ function routes($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('events', {
+            url: "/events",
+            templateUrl:"templates/events.html"
+
+        })
+
 
         //.state('app.search', {
         //    url: "/search",

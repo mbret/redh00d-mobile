@@ -37,9 +37,10 @@ function run($ionicPlatform, $state, user, UserService, CONFIG, $log, $cordovaSp
 
 
         setTimeout(function(){
-            
+
             // Try to get user information if authentication is still valid
             $log.debug('app -> run -> try to authenticate user');
+            /* Commentaire Login Serveur
             UserService.me()
                 .then(function(data){
                     $log.debug('app -> run -> user automatically authenticated, login bypassed');
@@ -53,7 +54,10 @@ function run($ionicPlatform, $state, user, UserService, CONFIG, $log, $cordovaSp
                     // ...
                     
                 });
-            
+            */
+            $state.go(CONFIG.state.events);
+
+
         }, 2000);
         
         // ..
