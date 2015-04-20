@@ -81,7 +81,8 @@ function routes($stateProvider, $urlRouterProvider) {
         })
         .state('events', {
             url: "/events",
-            templateUrl:"templates/events.html"
+            templateUrl:"templates/events.html",
+            controller:'EventsCtrl'
 
         })
 
