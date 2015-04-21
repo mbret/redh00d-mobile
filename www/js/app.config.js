@@ -42,7 +42,7 @@ function configureCONFIG($provide) {
     //var apiUrl = 'https://10.42.43.8:1340'; // maxime bourso
     //var apiUrl = 'https://yourip:1340'; // define your own
     var config = {
-        bypassLogin: false,
+        bypassLogin: true,
         apiUrl: apiUrl,
         route: {
             login: apiUrl + '/auth/login',
