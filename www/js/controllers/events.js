@@ -1,12 +1,14 @@
 'use strict';
 
 angular.module('starter.controllers')
-    .controller('EventsCtrl', EventsCtrl);
-
-EventsCtrl.$inject = ['$scope', 'Events', '$ionicLoading'];
-function EventsCtrl($scope, Events, $ionicLoading) {
-    
-    $scope.events = Events.fetchAll();
+    .controller('EventsCtrl', ContentController);
 
 
+function ContentController($scope, $ionicSideMenuDelegate) {
+  $scope.toggleLeft = function() {
+    $ionicSideMenuDelegate.toggleLeft();
+  };
 }
+
+
+

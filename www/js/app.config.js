@@ -51,7 +51,7 @@ function configureCONFIG($provide) {
             me: apiUrl + '/helper/me'
         },
         state: {
-            home: 'app.contacts.list',
+            home: 'events',
             login: 'auth.login',
             register: 'auth.register',
             forgotpassword: 'auth.register'
