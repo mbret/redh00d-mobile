@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('starter.controllers')
-    .controller('EventsCtrl', EventsCtrl);
+    .controller('EventsCtrl', ContentController);
 
 
 function ContentController($scope, $ionicSideMenuDelegate) {
