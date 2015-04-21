@@ -37,12 +37,10 @@ function configureUser($provide) {
     });
 }
 
-function configureCONFIG($provide) {
-    var apiUrl = 'https://192.168.1.24:1340'; // maxime desktop
-    //var apiUrl = 'https://10.42.43.8:1340'; // maxime bourso
-    //var apiUrl = 'https://yourip:1340'; // define your own
+function configureCONFIG($provide, LOCAL_CONFIG) {
+    var apiUrl = 'https://192.168.1.24:1340';
+    if(LOCAL_CONFIG.apiUrl) apiUrl = LOCAL_CONFIG.apiUrl;
     var config = {
-        bypassLogin: false,
         apiUrl: apiUrl,
         route: {
             login: apiUrl + '/auth/login',
@@ -57,6 +55,8 @@ function configureCONFIG($provide) {
             forgotpassword: 'auth.register'
         }
     };
+
+    config = angular.extend(config, LOCAL_CONFIG.config);
     $provide.constant('CONFIG', config);
 }
 

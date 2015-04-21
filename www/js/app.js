@@ -19,7 +19,7 @@ angular.module('starter.services', []);
 angular.module('starter.controllers', []);
 angular.module('starter.routes', []);
 
-function run($ionicPlatform, $rootScope, $state, user, UserService, CONFIG, $log, $ionicLoading, EVENTS, $cordovaToast, MESSAGES) {
+function run($ionicPlatform, $rootScope, $state, user, UserService, CONFIG, LOCAL_CONFIG, $log, $ionicLoading, EVENTS, $cordovaToast, MESSAGES) {
 
     // http://ngcordova.com/docs/common-issues/
     $ionicPlatform.ready(function() {
@@ -73,7 +73,7 @@ function run($ionicPlatform, $rootScope, $state, user, UserService, CONFIG, $log
         // We have time to see loading even if app start really fast
         setTimeout(function(){
 
-            if(CONFIG.bypassLogin === true){
+            if(LOCAL_CONFIG.bypassLogin === true){
                 $state.go(CONFIG.state.home);
                 $rootScope.$emit(EVENTS.APP_READY);
             }
