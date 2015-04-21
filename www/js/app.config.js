@@ -14,15 +14,17 @@ angular.module('starter')
         SHOW_LOADING: 'appShowLoading',
         HIDE_LOADING: 'appHideLoading'
     })
-    
+
+    // Use these constants to set general messages relative to the entire app.
     .constant('MESSAGES', {
         SERVER_ACCESS_ERROR: 'We are having troubles contacting our server!',
         UNEXPECTED_ERROR: 'An unexpected error happened!'
     })
 
+    // Use these constants to map API returns with local app.
+    // It avoid to search and replace when changes are made on API side.
     .constant('MAPPERS', {
-        RESPONSE_ACCESS_TOKEN: 'token'
-        
+        RESPONSE_ACCESS_TOKEN: 'token' // token json label for /auth
     })
     
     .config(configureUser)
@@ -30,13 +32,20 @@ angular.module('starter')
     .config(configureInterceptorsfunction)
     .config(configureIonic);
 
-
+/*
+ * Configure the user object.
+ * This object is used through the app to store the current logged user.
+ */
 function configureUser($provide) {
     $provide.constant('user', {
         authenticated: false // pass to true to bypass login
     });
 }
 
+/*
+ * This function define the global app config.
+ * You can add whatever you want and use it inside the app by simply calling CONFIG constant.
+ */
 function configureCONFIG($provide, LOCAL_CONFIG) {
     var apiUrl = 'https://192.168.1.24:1340';
     if(LOCAL_CONFIG.apiUrl) apiUrl = LOCAL_CONFIG.apiUrl;
@@ -60,11 +69,19 @@ function configureCONFIG($provide, LOCAL_CONFIG) {
     $provide.constant('CONFIG', config);
 }
 
+/*
+ * Interceptors are intern components to angular that watch before something.
+ * Here we push some app's custom interceptor to add behaviour like intercept request and response
+ * and do something with it.
+ */
 function configureInterceptorsfunction($httpProvider) {
     $httpProvider.interceptors.push('httpResponseInterceptor');
     $httpProvider.interceptors.push('httpRequestInterceptor');
 }
 
+/*
+ * Use this function to configure ionic core behaviour.
+ */
 function configureIonic($ionicConfigProvider) {
 
     $ionicConfigProvider.tabs.position('bottom'); //Places them at the bottom for all OS
