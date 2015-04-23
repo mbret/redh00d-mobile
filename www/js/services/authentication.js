@@ -12,7 +12,7 @@ function AuthenticationService($http, CONFIG, $q, $log, $localStorage, UserServi
         logout: logout
     };
 
-    function loguut(user) {
+    function logout(user) {
         UserService.cleanLocalTraces();
         $log.debug('authentication -> logout');
 
