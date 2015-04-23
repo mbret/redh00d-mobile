@@ -34,6 +34,7 @@ function run($ionicPlatform, $rootScope, $state, user, UserService, CONFIG, LOCA
         if (window.cordova && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         }
+        
         if (window.StatusBar) {
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
@@ -52,6 +53,10 @@ function run($ionicPlatform, $rootScope, $state, user, UserService, CONFIG, LOCA
                 //$ionicLoading.hide();
             });
 
+            $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
+                $log.debug('event -> $stateChangeStart -> from ' + fromState.name + ' to ' + toState.name);
+            });
+            
             $rootScope.$on(EVENTS.SHOW_LOADING, function(event, data){
                 $log.debug('event -> ', EVENTS.SHOW_LOADING);
                 $ionicLoading.show();
@@ -68,41 +73,45 @@ function run($ionicPlatform, $rootScope, $state, user, UserService, CONFIG, LOCA
             $log.debug('event -> ', EVENTS.UNEXPECTED_ERROR);
             $cordovaToast.showLongBottom(MESSAGES.UNEXPECTED_ERROR);
         });
+
+        // Always go to login view on startup
+        // It prevent side effect because some controller need user to be authenticated
+        $state.go(CONFIG.state.welcome);
         
         // Simulate a little timeout for a better app loading effect.
         // We have time to see loading even if app start really fast
         setTimeout(function(){
 
-            if(LOCAL_CONFIG.bypassLogin === true){
-                $state.go(CONFIG.state.home);
-                $rootScope.$emit(EVENTS.APP_READY);
-            }
-            else{
-                // Try to get user information if authentication is still valid
-                $log.debug('app -> run -> try to authenticate user');
-                UserService.me()
-                    .then(function(data){
-                        if(data){
-                            $log.debug('app -> run -> user automatically authenticated, login bypassed');
-                            angular.extend(user, data);
-                            $state.go(CONFIG.state.home);
-                            // ...
-                        }
-                        else{
-                            $log.debug('app -> run -> user could not be authenticated, login needed');
-                            UserService.cleanLocalTraces(); // clean everything about a possible previous user (like tokens, ...)
-                            $state.go(CONFIG.state.login);
-                            // ...
-                        }
-                    })
-                    .catch(function(err){
-                        $state.go(CONFIG.state.login);
-                    })
-                    .finally(function(){
-                        // At this point the app is ready, there are no more critical process to run before user can use app.
+        //    if(LOCAL_CONFIG.bypassLogin === true){
+        //        $state.go(CONFIG.state.home);
+        //        $rootScope.$emit(EVENTS.APP_READY);
+        //    }
+        //    else{
+        //        // Try to get user information if authentication is still valid
+        //        $log.debug('app -> run -> try to authenticate user');
+        //        UserService.me()
+        //            .then(function(data){
+        //                if(data){
+        //                    $log.debug('app -> run -> user automatically authenticated, login bypassed');
+        //                    angular.extend(user, data);
+        //                    $state.go(CONFIG.state.home);
+        //                    // ...
+        //                }
+        //                else{
+        //                    $log.debug('app -> run -> user could not be authenticated, login needed');
+        //                    UserService.cleanLocalTraces(); // clean everything about a possible previous user (like tokens, ...)
+        //                    $state.go(CONFIG.state.login);
+        //                    // ...
+        //                }
+        //            })
+        //            .catch(function(err){
+        //                $state.go(CONFIG.state.login);
+        //            })
+        //            .finally(function(){
+        //                // At this point the app is ready, there are no more critical process to run before user can use app.
                         $rootScope.$emit(EVENTS.APP_READY); // firing an event upwards
-                    });
-            }
+        //            });
+        //    }
 
 
         }, 1000);

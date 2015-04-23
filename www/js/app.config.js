@@ -27,6 +27,10 @@ angular.module('starter')
         RESPONSE_ACCESS_TOKEN: 'token' // token json label for /auth
     })
     
+    .constant('STORAGE_KEYS', {
+        HIDE_WELCOME: 'hide_welcome'
+    })
+    
     .config(configureUser)
     .config(configureCONFIG)
     .config(configureInterceptorsfunction)
@@ -58,10 +62,11 @@ function configureCONFIG($provide, LOCAL_CONFIG) {
             me: apiUrl + '/helper/me'
         },
         state: {
-            home: 'app.contacts.list',
+            home: 'events',
             login: 'auth.login',
             register: 'auth.register',
-            forgotpassword: 'auth.register'
+            forgotpassword: 'auth.register',
+            welcome: 'welcome'
         }
     };
 

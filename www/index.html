@@ -5,12 +5,13 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
 
-
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
+    <!--<link href="//code.ionicframework.com/nightly/css/ionic.css" rel="stylesheet">-->
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <!--<script src="//code.ionicframework.com/nightly/js/ionic.bundle.js"></script>-->
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
@@ -21,6 +22,7 @@
     <script src="js/app.js"></script>
     <script src="js/app.config.js"></script>
     <script src="js/app.routes.js"></script>
+    <script src="js/controllers/welcome.js"></script>
     <script src="js/controllers/app.js"></script>
     <script src="js/controllers/events.js"></script>
     <script src="js/controllers/login.js"></script>
@@ -42,6 +44,13 @@
   </head>
 
     <body ng-app="starter">
+    
+        <ion-nav-bar class="bar-positive" align-title="center">
+            <!--By default and when a navigation history is available this back button will appear on any sub view's header-->
+            <!--It can be hide thanks to directive-->
+            <ion-nav-back-button>
+            </ion-nav-back-button>
+        </ion-nav-bar>
 
         <!--The ion-nav-view is our container. Ionic’s router will look for this directive throughout our code to insert templates.
         ion-nav-view supports inheritance, named views, and other features that we will discuss in depth throughout this series.-->

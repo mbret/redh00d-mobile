@@ -7,13 +7,26 @@ function routes($stateProvider, $urlRouterProvider) {
 
     // if none of the above states are matched, use this as the fallback
     // READ IT : when app is launching this route is called and is then viewed for a second while application take control
-    $urlRouterProvider.otherwise('/auth/login');
+    $urlRouterProvider.otherwise('welcome');
 
     $stateProvider
 
-        .state('blank',{
-            url: '/blank',
-            template: 'If you are here, it means that the url provided doesn\'t exist and I love you'
+        // Welcome page
+        .state('welcome', {
+            url: '/welcome',
+            templateUrl: 'templates/welcome.html',
+            controller: 'WelcomeCtrl',
+            onEnter: function($localStorage, STORAGE_KEYS, $state, CONFIG){
+                if($localStorage.get(STORAGE_KEYS.HIDE_WELCOME)){
+                    $state.go(CONFIG.state.home);
+                }
+            }
+        })
+        
+        .state('events',{
+            url: '/events',
+            templateUrl: 'templates/events.html',
+            controller: 'EventsCtrl'
         })
         
         // Main and default view

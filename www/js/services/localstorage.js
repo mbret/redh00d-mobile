@@ -11,7 +11,10 @@ angular.module('starter.services')
                 $window.localStorage.removeItem(key);
             },
             get: function(key, defaultValue) {
-                return $window.localStorage[key] || defaultValue;
+                var value = $window.localStorage[key] || defaultValue;
+                if(value == "true") return true;
+                else if(value == "false") return false;
+                else return value;
             },
             has: function(key){
                 return ($window.localStorage[key]) ? true : false;

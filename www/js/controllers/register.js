@@ -5,6 +5,8 @@ angular.module('starter.controllers')
 
 function RegisterCtrl($scope, $rootScope, $timeout, user, $state, $ionicLoading, $ionicPopup, AuthenticationService) {
 
+    console.log('register');
+    
     $scope.data = {};
 
     /**
