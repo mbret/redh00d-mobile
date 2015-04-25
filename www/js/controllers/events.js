@@ -3,14 +3,14 @@
 angular.module('starter.controllers')
     .controller('EventsCtrl', EventsCtrl);
 
-EventsCtrl.$inject = ['$scope', 'Events', '$ionicLoading', '$ionicHistory', '$ionicNavBarDelegate'];
-function EventsCtrl($scope, Events, $ionicLoading, $ionicHistory, $ionicNavBarDelegate) {
+EventsCtrl.$inject = ['$scope', 'Events', '$ionicLoading', '$ionicHistory', '$ionicNavBarDelegate', 'UserService'];
+function EventsCtrl($scope, Events, $ionicLoading, $ionicHistory, $ionicNavBarDelegate, UserService) {
     
     $scope.events = Events.fetchAll();
-
-    // On event view we clear navigation history and hide back button
-    // This is the home behaviour
-    $ionicHistory.clearHistory();
-    $ionicNavBarDelegate.showBackButton(false);
     
+    setTimeout(function(){
+        var currentAuth = UserService.me();
+    }, 5000);
+
+
 }

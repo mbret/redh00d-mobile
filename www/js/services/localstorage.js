@@ -5,7 +5,9 @@ angular.module('starter.services')
     .factory('$localStorage', ['$window', function($window) {
         return {
             set: function(key, value) {
-                $window.localStorage[key] = value;
+                if( typeof value !== 'undefined' ){
+                    $window.localStorage[key] = value;
+                }
             },
             delete: function(key){
                 $window.localStorage.removeItem(key);

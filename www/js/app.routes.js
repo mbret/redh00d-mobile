@@ -11,22 +11,29 @@ function routes($stateProvider, $urlRouterProvider) {
 
     $stateProvider
 
+        .state('blank', {
+            url: '/blank',
+            template: 'App is loading'
+        })
+        
         // Welcome page
         .state('welcome', {
             url: '/welcome',
             templateUrl: 'templates/welcome.html',
             controller: 'WelcomeCtrl',
-            onEnter: function($localStorage, STORAGE_KEYS, $state, CONFIG){
-                if($localStorage.get(STORAGE_KEYS.HIDE_WELCOME)){
-                    $state.go(CONFIG.state.home);
-                }
+            onEnter: function($ionicHistory, $ionicNavBarDelegate, $state, CONFIG, $rootScope, $log){
+                //$ionicHistory.clearHistory();
+                //$ionicNavBarDelegate.showBackButton(false);
             }
         })
         
         .state('events',{
             url: '/events',
             templateUrl: 'templates/events.html',
-            controller: 'EventsCtrl'
+            controller: 'EventsCtrl',
+            data: {
+                authRequired: true
+            }
         })
         
         // Main and default view
@@ -38,25 +45,21 @@ function routes($stateProvider, $urlRouterProvider) {
             controller: 'AppCtrl'
         })
 
-        .state('auth', {
-            url: '/auth',
-            abstract: true,
-            templateUrl: "templates/auth/index.html"
-        })
-        .state('auth.login', {
+        .state('login', {
             url: "/login",
             templateUrl: "templates/auth/login.html",
             controller: 'LoginCtrl',
             data: {
-                title: 'Login'
+                noAuthRequired: true
             }
         })
-        .state('auth.register', {
+        
+        .state('register', {
             url: "/register",
             templateUrl: "templates/auth/register.html",
             controller: 'RegisterCtrl',
             data: {
-                title: 'Register'
+                noAuthRequired: true
             }
         })
 

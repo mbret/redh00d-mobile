@@ -3,17 +3,40 @@
 angular.module('starter.services')
     .factory('AuthenticationService', AuthenticationService);
 
-AuthenticationService.$injector = ['$http', 'CONFIG', '$q', '$log', '$localStorage', 'UserService', '$rootScope', 'EVENTS', 'MAPPERS'];
-function AuthenticationService($http, CONFIG, $q, $log, $localStorage, UserService, $rootScope, EVENTS, MAPPERS){
+AuthenticationService.$injector = ['$http', 'CONFIG', '$q', '$log', '$localStorage', 'UserService', '$rootScope', 'EVENTS', 'MAPPERS', 'STORAGE_KEYS'];
+function AuthenticationService($http, CONFIG, $q, $log, $localStorage, UserService, $rootScope, EVENTS, MAPPERS, STORAGE_KEYS){
 
     return {
+        isAuthenticated: isAuthenticated,
         register: register,
         login: login,
-        logout: logout
+        logout: logout,
+        logoutLocal: logoutLocal,
+        cleanLocalTraces: cleanLocalTraces
     };
 
-    function logout(user) {
-        UserService.cleanLocalTraces();
+    function cleanLocalTraces(){
+        $localStorage.delete('access_token');
+        $log.debug('UserService.cleanLocalTraces -> user traces deleted');
+    }
+    
+    /**
+     * Check if the user is authenticated with the server.
+     * This method is local only. It's based on cache/local storage.
+     * The user could be unauthenticated with server for many reason but this method simple protect ux design.
+     */
+    function isAuthenticated(){
+        // We suppose that if user has access_token then he is authenticated
+        if($localStorage.has(STORAGE_KEYS.ACCESS_TOKEN)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+    function logout() {
+        logoutLocal();
         $log.debug('authentication -> logout');
 
         return $q.when();
@@ -22,6 +45,10 @@ function AuthenticationService($http, CONFIG, $q, $log, $localStorage, UserServi
         //        delete $http.defaults.headers.common.Authorization;
         //        $rootScope.$broadcast('event:auth-logout-complete');
         //    });
+    }
+    
+    function logoutLocal(){
+        cleanLocalTraces();
     }
 
     /**
@@ -37,7 +64,7 @@ function AuthenticationService($http, CONFIG, $q, $log, $localStorage, UserServi
                 $log.debug('authentication success -> access_token : ' + data.data.token);
 
                 // save access token for futur request
-                $localStorage.set('access_token', data.data[MAPPERS.RESPONSE_ACCESS_TOKEN]);
+                $localStorage.set(STORAGE_KEYS.ACCESS_TOKEN, data.data[MAPPERS.RESPONSE_ACCESS_TOKEN]);
 
                 // Load account information, now this method should work.
                 // will return data or null
@@ -68,7 +95,7 @@ function AuthenticationService($http, CONFIG, $q, $log, $localStorage, UserServi
                 $log.debug('AuthenticationService.register -> success: ' + data.data);
 
                 // save access token for futur request
-                $localStorage.set('access_token', data.data[MAPPERS.RESPONSE_ACCESS_TOKEN]);
+                $localStorage.set(STORAGE_KEYS.ACCESS_TOKEN, data.data[MAPPERS.RESPONSE_ACCESS_TOKEN]);
 
                 // Load account information, now this method should work.
                 // will return data or null

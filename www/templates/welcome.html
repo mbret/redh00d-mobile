@@ -1,12 +1,12 @@
-<ion-view view-title="Intro">
+<ion-view view-title="Intro" hide-back-button="true">
     
     <ion-nav-buttons side="left">
-        <button class="button button-clear no-animation ng-hide" ng-click="startApp()" ng-show="!slideIndex">Skip Intro</button>
-        <button class="button button-clear no-animation ng-hide" ng-click="previous()" ng-show="slideIndex > 0">Previous Slide</button>
+        <button class="button button-clear no-animation ng-hide" ng-click="startApp()" ng-show="!slideIndex">Skip</button>
+        <button class="button button-clear no-animation ng-hide" ng-click="previous()" ng-show="slideIndex > 0">Previous</button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-        <button class="button button-clear no-animation ng-hide" ng-click="next()" ng-show="slideIndex < nbSlides">Next</button>
-        <button class="button button-clear no-animation ng-hide" ng-click="startApp()" ng-show="slideIndex === 2">Start using app</button>
+        <button class="button button-clear no-animation ng-hide" ng-click="next()" ng-show="slideIndex < (nbSlides-1)">Next</button>
+        <button class="button button-clear no-animation ng-hide" ng-click="startApp()" ng-show="slideIndex === (nbSlides - 1)">Start</button>
     </ion-nav-buttons>
     
     <ion-slide-box on-slide-changed="onSlideChange(index)">
@@ -30,6 +30,7 @@
         </ion-slide>
     </ion-slide-box>
 
-    <ion-checkbox ng-model="hideNextTime" ng-change="onHideNextTimeChange(hideNextTime)">Hide next time</ion-checkbox>
+    <!--<ion-checkbox ng-model="hideNextTime" ng-change="onHideNextTimeChange(hideNextTime)">Hide next time</ion-checkbox>-->
+    <ion-checkbox ng-model="hideNextTime" >Hide next time</ion-checkbox>
 
 </ion-view>

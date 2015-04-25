@@ -10,29 +10,52 @@ httpResponseInterceptor.$injector = ['$q','$location', '$injector', 'MESSAGES'];
  * @param $location
  * @returns {{response: Function}}
  */
-function httpResponseInterceptor($q, $rootScope, $injector, MESSAGES, EVENTS){
+function httpResponseInterceptor($q, $injector, MESSAGES, EVENTS, CONFIG, $log, $timeout){
+
+    var $rootScope;
+    $timeout(function () {
+        $rootScope = $injector.get('$rootScope');
+    });
+    
     return {
         
         response: function(response) {
-            $rootScope.$broadcast(EVENTS.HIDE_LOADING); // less coupling with plugins
+
+            if(isHttpRequest(response.config)){
+                $rootScope.$broadcast(EVENTS.RESPONSE_RECEIVED);
+            }
+            
             return response
         },
         
         responseError: function(rejection) {
 
-            $rootScope.$broadcast(EVENTS.HIDE_LOADING); // less coupling with plugins
+            if(isHttpRequest(rejection.config)){
+                $rootScope.$broadcast(EVENTS.RESPONSE_RECEIVED);
+            }
             
-            // Problem with server
+            console.log(rejection);
+            
+            // Problem with server (unreachable)
             if(rejection.status == 0){
-                //$injector.get("$ionicPopup").alert({
-                //    title: 'Error!',
-                //    template: 'We are having issue to contact server!'
-                //});
-                var a = $injector.get('$cordovaToast').showLongBottom(MESSAGES.SERVER_ACCESS_ERROR);
-                console.log(a);
+                $rootScope.$broadcast(EVENTS.SERVER_ACCESS_ERROR);
             }
 
+            // Intercept unauthenticated response. We need to redirect to login because it's not normal to be unauthenticated
+            if(rejection.status === 401){
+                $rootScope.$broadcast(EVENTS.SERVER_UNAUTHENTICATED_ERROR);
+            }
+            
             return $q.reject(rejection);
         }
+    };
+
+    function isApiRequest(config){
+        return config.url.indexOf(CONFIG.apiUrl) === 0 ? true : false;
     }
+
+    function isHttpRequest(config){
+        return config.url.indexOf('http') === 0 ? true : false;
+    }
+    
 }

@@ -13,12 +13,17 @@
             // By pass the login section (useful to rapidly test application)
             bypassLogin: false,
 
+            // Hide or show main events log (like router event, app events, etc)
+            hideEventLog: false,
+            
             // This part will be merged into CONFIG constants.
             // It will take priority on app.config.js
             config: {
 
                 // Set your web service url here. The url of the web service is displayed when lifted.
-                apiUrl: 'https://localhost:1340'
+                apiUrl: 'https://localhost:1340',
+
+                allowCordorva: false
             }
         });
 })();

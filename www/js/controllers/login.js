@@ -3,11 +3,11 @@
 angular.module('starter.controllers')
     .controller('LoginCtrl', LoginCtrl);
 
-LoginCtrl.$injector = ['$rootScope', '$scope', '$log', 'popupService', 'user', '$state', '$ionicLoading', '$ionicPopup', 'AuthenticationService', 'CONFIG', '$localStorage', 'UserService', '$cordovaOauth', '$cordovaInAppBrowser'];
-function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicLoading, $ionicPopup, AuthenticationService, CONFIG, $localStorage, UserService, $cordovaOauth, $cordovaInAppBrowser) {
+LoginCtrl.$injector = ['$rootScope', '$scope', '$log', 'popupService', 'user', '$state', '$ionicHistory', '$ionicPopup', 'AuthenticationService', 'CONFIG', '$localStorage', 'UserService', '$cordovaOauth', '$cordovaInAppBrowser'];
+function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicHistory, $ionicPopup, AuthenticationService, CONFIG, $localStorage, UserService, $cordovaOauth, $cordovaInAppBrowser) {
 
     $scope.data = {
-        email: 'user',
+        email: 'user@fake.com',
         password: 'password'
     };
 
@@ -62,6 +62,8 @@ function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicL
                 AuthenticationService.login($scope.data.email, $scope.data.password)
                     .then(function(data){
                         angular.extend(user, data);
+
+                        $ionicHistory.nextViewOptions({ disableBack: true });
                         $state.go(CONFIG.state.home);
                     })
                     .catch(function(err) {

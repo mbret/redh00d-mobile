@@ -31,12 +31,9 @@ function UserService($http, CONFIG, $rootScope, $log, $q, $localStorage){
                     }
                     throw err;
                 });
-        },
-
-        cleanLocalTraces: function(){
-            $localStorage.delete('access_token');
-            $log.debug('UserService.cleanLocalTraces -> user traces deleted');
         }
+
+
 
     };
     return service;
