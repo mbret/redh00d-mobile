@@ -7,13 +7,33 @@ function routes($stateProvider, $urlRouterProvider) {
 
     // if none of the above states are matched, use this as the fallback
     // READ IT : when app is launching this route is called and is then viewed for a second while application take control
-    $urlRouterProvider.otherwise('/auth/login');
+    $urlRouterProvider.otherwise('welcome');
 
     $stateProvider
 
-        .state('blank',{
+        .state('blank', {
             url: '/blank',
-            template: 'If you are here, it means that the url provided doesn\'t exist and I love you'
+            template: 'App is loading'
+        })
+        
+        // Welcome page
+        .state('welcome', {
+            url: '/welcome',
+            templateUrl: 'templates/welcome.html',
+            controller: 'WelcomeCtrl',
+            onEnter: function($ionicHistory, $ionicNavBarDelegate, $state, CONFIG, $rootScope, $log){
+                //$ionicHistory.clearHistory();
+                //$ionicNavBarDelegate.showBackButton(false);
+            }
+        })
+        
+        .state('events',{
+            url: '/events',
+            templateUrl: 'templates/events.html',
+            controller: 'EventsCtrl',
+            data: {
+                authRequired: true
+            }
         })
         
         // Main and default view
@@ -25,25 +45,21 @@ function routes($stateProvider, $urlRouterProvider) {
             controller: 'AppCtrl'
         })
 
-        .state('auth', {
-            url: '/auth',
-            abstract: true,
-            templateUrl: "templates/auth/index.html"
-        })
-        .state('auth.login', {
+        .state('login', {
             url: "/login",
             templateUrl: "templates/auth/login.html",
             controller: 'LoginCtrl',
             data: {
-                title: 'Login'
+                noAuthRequired: true
             }
         })
-        .state('auth.register', {
+        
+        .state('register', {
             url: "/register",
             templateUrl: "templates/auth/register.html",
             controller: 'RegisterCtrl',
             data: {
-                title: 'Register'
+                noAuthRequired: true
             }
         })
 
@@ -78,14 +94,6 @@ function routes($stateProvider, $urlRouterProvider) {
                     controller: 'ContactsGroupsCtrl'
                 }
             }
-        })
-        .state('events', {
-            url: "/events",
-            templateUrl:"templates/events.html",
-            controller:'EventsCtrl'
-
-        })
-
-
+        });
 
 }

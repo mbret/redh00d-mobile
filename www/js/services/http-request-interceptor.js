@@ -12,12 +12,18 @@ httpRequestInterceptor.$injector = ['$q','$log', 'CONFIG', '$localStorage'];
  * @param $localStorage
  * @returns {{request: Function}}
  */
-function httpRequestInterceptor($rootScope,$log, CONFIG, $localStorage, EVENTS){
+function httpRequestInterceptor($rootScope, $log, CONFIG, $localStorage, EVENTS, $timeout, $injector){
+
+    var $state;
+    $timeout(function () {
+        $state = $injector.get('$state');
+    });
+    
     return {
         request: function (config) {
 
             // log only api requests
-            if ( config.url.indexOf(CONFIG.apiUrl) === 0 ) $log.debug('httpRequestInterceptor -> request -> request made at /' + config.method + ' ' + config.url);
+            if ( isApiRequest(config) ) $log.debug('httpRequestInterceptor -> request -> /' + config.method + ' ' + config.url);
             
             config.headers = config.headers || {};
             
@@ -27,9 +33,19 @@ function httpRequestInterceptor($rootScope,$log, CONFIG, $localStorage, EVENTS){
                 config.headers.Authorization = 'JWT ' + $localStorage.get('access_token');
             }
 
-            $rootScope.$broadcast(EVENTS.SHOW_LOADING);
+            if(isHttpRequest(config)){
+                $rootScope.$broadcast(EVENTS.REQUEST_SENT, config.url);
+            }
 
             return config;
         }
+    }
+    
+    function isApiRequest(config){
+        return config.url.indexOf(CONFIG.apiUrl) === 0 ? true : false;
+    }
+    
+    function isHttpRequest(config){
+        return config.url.indexOf('http') === 0 ? true : false;
     }
 }

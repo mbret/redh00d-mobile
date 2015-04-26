@@ -9,8 +9,13 @@ function UserService($http, CONFIG, $rootScope, $log, $q, $localStorage){
     var service = {
 
         /**
-         * This method will return the user profile data if he is authenticated, null otherwise.
-         * @returns {*}
+         * Try to retrieve user data based on local stored information.
+         * If it's not possible to retrieve user data it means that the user need
+         * to be authenticated or logged first.
+         *
+         * @tips You can use this method whenever you want to check if user is logged.
+         *
+         * @returns promise with user data or null
          */
         me: function(){
             return $http.get(CONFIG.route.me)
@@ -26,12 +31,9 @@ function UserService($http, CONFIG, $rootScope, $log, $q, $localStorage){
                     }
                     throw err;
                 });
-        },
-
-        cleanLocalTraces: function(){
-            $localStorage.delete('access_token');
-            $log.debug('UserService.cleanLocalTraces -> user traces deleted');
         }
+
+
 
     };
     return service;

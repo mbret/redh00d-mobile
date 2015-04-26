@@ -2,3 +2,10 @@
 .popup .popup-body {
     overflow: hidden !important;
 }
+
+// When navigating with multiple button that are ng-show dynamically
+// the previous button get displayed until view is finally displayed
+// see http://forum.ionicframework.com/t/beta-14-ng-hide-show/14270/14
+.button.ng-hide{
+    display:none;
+}
