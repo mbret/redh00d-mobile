@@ -9,8 +9,29 @@
     <ion-side-menus>
         <!-- Center content -->
         <ion-side-menu-content >
-            Voici ton contenu
-            <button ng-click="toggleLeft()">Open left menu</button>
+
+            <!-- head bar -->
+            <div class="bar bar-header bar-assertive">
+                <button ng-click="toggleLeft()" class="button icon ion-navicon"></button>
+                <h1 class="title">Events</h1>
+                <button class="button">Edit</button>
+            </div>
+
+            <ion-scroll>
+                
+            <!-- events list -->
+            <div class="list">
+
+                <a class="item item-thumbnail-left" href='#'>
+                    <img src="/img/event1.jpg">
+                    <h2>Pretty Hate Machine</h2>
+                    <p>Nine Inch Nails</p>
+                </a>
+
+            </div>
+
+            </ion-scroll>
+
         </ion-side-menu-content>
 
         <!-- Left menu -->
@@ -18,10 +39,10 @@
             Voici le contenu de mon menu gauche
         </ion-side-menu>
 
-        <!-- Right menu -->
+        <!-- Right menu
         <ion-side-menu side="right">
             Voici le contenu de mon menu droite
-        </ion-side-menu>
+        </ion-side-menu> -->
     </ion-side-menus>
 
 
