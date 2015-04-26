@@ -7,7 +7,7 @@ function routes($stateProvider, $urlRouterProvider) {
 
     // if none of the above states are matched, use this as the fallback
     // READ IT : when app is launching this route is called and is then viewed for a second while application take control
-    $urlRouterProvider.otherwise('welcome');
+    $urlRouterProvider.otherwise('home');
 
     $stateProvider
 

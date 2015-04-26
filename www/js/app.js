@@ -101,6 +101,9 @@ function run($ionicPlatform, $ionicConfig, $rootScope, $state, user, $localStora
         function onAppReady(event, data){
             $log.debug('event -> ', EVENTS.APP_READY);
 
+            $ionicHistory.clearHistory();
+            $ionicHistory.clearCache();
+            
             // Only define these event when app is ready
             // It avoid display stuff on top of possible loading screen during app starting
             $rootScope.$on(EVENTS.REQUEST_SENT, onRequestSent);
@@ -109,12 +112,16 @@ function run($ionicPlatform, $ionicConfig, $rootScope, $state, user, $localStora
             // Hide ionic loading screen as our app is ready to use
             $ionicLoading.hide();
 
-            // Always go to login view on startup
+            // Always go to welcome view on startup
+            // It will check if user want to hide welcome. Then go to home. If user is not logged go to login
             $ionicHistory.nextViewOptions({ disableAnimate: true, disableBack: true });
-            $state.go(CONFIG.state.welcome).then(function(){
-                
-
-            });
+            if( $localStorage.has(STORAGE_KEYS.HIDE_WELCOME) && $localStorage.get(STORAGE_KEYS.HIDE_WELCOME) ){
+                $log.debug('Route welcome is bypassed as user want');
+                $state.go(CONFIG.state.home);
+            }
+            else{
+                $state.go(CONFIG.state.welcome).then(function(){ });
+            }
 
             /*
              * This event is fired when
@@ -141,6 +148,7 @@ function run($ionicPlatform, $ionicConfig, $rootScope, $state, user, $localStora
 
             // Prevent navigation to blank
             if( toState.name == CONFIG.state.blank ){
+                $log.debug('Route blank is not accessible, event stopped');
                 event.preventDefault();
             }
             
@@ -152,13 +160,6 @@ function run($ionicPlatform, $ionicConfig, $rootScope, $state, user, $localStora
                     event.preventDefault();
                     $state.go(CONFIG.state.login);
                 }
-            }
-
-            // Hide welcome if user want it
-            if( toState.name == CONFIG.state.welcome && $localStorage.has(STORAGE_KEYS.HIDE_WELCOME) && $localStorage.get(STORAGE_KEYS.HIDE_WELCOME) ){
-                $log.debug('Route welcome is bypassed as user want');
-                event.preventDefault();
-                $state.go(CONFIG.state.home);
             }
             
             // Redirect user if he is already logged
