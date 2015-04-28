@@ -9,11 +9,19 @@ function routes($stateProvider, $urlRouterProvider) {
     // READ IT : when app is launching this route is called and is then viewed for a second while application take control
     $urlRouterProvider.otherwise('home');
 
+    // If a route is accessible for user unauthenticated you must specified data.authRequired = false.
+    // The policy is in strict mod and need auth by default.
+    //
+    // If you want to block a view when user is logged use data.accessibleWhenAuthenticated = false. This setting is not strict
+    // so all routes will be accessible unless you set to false.
     $stateProvider
 
         .state('blank', {
             url: '/blank',
-            template: 'App is loading'
+            template: 'App is loading',
+            data: {
+                authRequired: false
+            }
         })
         
         // Welcome page
@@ -24,6 +32,9 @@ function routes($stateProvider, $urlRouterProvider) {
             onEnter: function($ionicHistory, $ionicNavBarDelegate, $state, CONFIG, $rootScope, $log){
                 //$ionicHistory.clearHistory();
                 //$ionicNavBarDelegate.showBackButton(false);
+            },
+            data: {
+                authRequired: false
             }
         })
         
@@ -50,7 +61,8 @@ function routes($stateProvider, $urlRouterProvider) {
             templateUrl: "templates/auth/login.html",
             controller: 'LoginCtrl',
             data: {
-                noAuthRequired: true
+                authRequired: false,
+                accessibleWhenAuthenticated: false
             }
         })
         
@@ -59,13 +71,15 @@ function routes($stateProvider, $urlRouterProvider) {
             templateUrl: "templates/auth/register.html",
             controller: 'RegisterCtrl',
             data: {
-                noAuthRequired: true
+                authRequired: false,
+                accessibleWhenAuthenticated: false
             }
         })
 
+        // A route exist for logout, this is a simple route without any display.
         .state('logout', {
             url: '/logout',
-            templateUrl: "<ion-nav-view></ion-nav-view>",
+            template: "<ion-nav-view></ion-nav-view>",
             controller: 'LogoutCtrl'
         })
         

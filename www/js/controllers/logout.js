@@ -3,12 +3,8 @@
 angular.module('starter.controllers')
     .controller('LogoutCtrl', LogoutCtrl);
 
-function LogoutCtrl($scope, popupService, CONFIG, user, $state, AuthenticationService, $ionicPopup) {
+function LogoutCtrl($scope, popupService, CONFIG, user, $state, authenticationService, $ionicPopup) {
 
-    AuthenticationService.logout()
-        .then(function(){
-            popupService.loggedOut();
-            $state.go(CONFIG.state.login);
-        });
+    authenticationService.logout();
     
 }

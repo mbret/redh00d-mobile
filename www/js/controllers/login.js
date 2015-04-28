@@ -3,8 +3,8 @@
 angular.module('starter.controllers')
     .controller('LoginCtrl', LoginCtrl);
 
-LoginCtrl.$injector = ['$rootScope', '$scope', '$log', 'popupService', 'user', '$state', '$ionicHistory', '$ionicPopup', 'AuthenticationService', 'CONFIG', '$localStorage', 'UserService', '$cordovaOauth', '$cordovaInAppBrowser'];
-function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicHistory, $ionicPopup, AuthenticationService, CONFIG, $localStorage, UserService, $cordovaOauth, $cordovaInAppBrowser) {
+LoginCtrl.$injector = ['$rootScope', '$scope', '$log', 'popupService', 'user', '$state', '$ionicHistory', '$ionicPopup', 'authenticationService', 'CONFIG', '$localStorage', 'UserService', '$cordovaOauth', '$cordovaInAppBrowser'];
+function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicHistory, $ionicPopup, authenticationService, CONFIG, $localStorage, UserService, $cordovaOauth, $cordovaInAppBrowser) {
 
     $scope.data = {
         email: 'user@fake.com',
@@ -59,7 +59,7 @@ function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicH
             }
             // Login with credentials
             else{
-                AuthenticationService.login($scope.data.email, $scope.data.password)
+                authenticationService.login($scope.data.email, $scope.data.password)
                     .then(function(data){
                         angular.extend(user, data);
 
@@ -69,7 +69,7 @@ function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicH
                     .catch(function(err) {
                         // Bad request
                         if(err && err.status && err.status === 400){
-                            popupService.badCredentials();
+                            popupService.show(popupService.template.BAD_CREDENTIAL);
                         }
                     });
             }

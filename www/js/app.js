@@ -19,7 +19,7 @@ angular.module('starter.services', []);
 angular.module('starter.controllers', []);
 angular.module('starter.routes', []);
 
-function run($ionicPlatform, $ionicConfig, $rootScope, $state, user, $localStorage, STORAGE_KEYS, CONFIG, LOCAL_CONFIG, $log, $ionicLoading, EVENTS, $ionicHistory, MESSAGES, ToastService, AuthenticationService) {
+function run($ionicPlatform, popupService, $rootScope, $state, user, $localStorage, STORAGE_KEYS, CONFIG, LOCAL_CONFIG, $log, $ionicLoading, EVENTS, $ionicHistory, MESSAGES, toastService, authenticationService) {
 
     // At startup always go to blank page until platform is not ready
     // The blank page does nothing and can be hide by a loader for example
@@ -47,6 +47,7 @@ function run($ionicPlatform, $ionicConfig, $rootScope, $state, user, $localStora
 
         // Add event for our application
         $rootScope.$on(EVENTS.APP_READY, onAppReady);
+        $rootScope.$on(EVENTS.USER_LOGGED_OUT, onUserLoggedOut);
         $rootScope.$on(EVENTS.UNEXPECTED_ERROR, onUnexpectedError);
         $rootScope.$on(EVENTS.SERVER_ACCESS_ERROR, onServerAccessError);
         $rootScope.$on(EVENTS.SERVER_UNAUTHENTICATED_ERROR, onServerResponseUnauthenticated);
@@ -59,39 +60,7 @@ function run($ionicPlatform, $ionicConfig, $rootScope, $state, user, $localStora
         // Simulate a little timeout for a better app loading effect.
         // We have time to see loading even if app start really fast
         setTimeout(function(){
-            
-        //    if(LOCAL_CONFIG.bypassLogin === true){
-        //        $state.go(CONFIG.state.home);
-        //        $rootScope.$emit(EVENTS.APP_READY);
-        //    }
-        //    else{
-        //        // Try to get user information if authentication is still valid
-        //        $log.debug('app -> run -> try to authenticate user');
-        //        UserService.me()
-        //            .then(function(data){
-        //                if(data){
-        //                    $log.debug('app -> run -> user automatically authenticated, login bypassed');
-        //                    angular.extend(user, data);
-        //                    $state.go(CONFIG.state.home);
-        //                    // ...
-        //                }
-        //                else{
-        //                    $log.debug('app -> run -> user could not be authenticated, login needed');
-        //                    UserService.cleanLocalTraces(); // clean everything about a possible previous user (like tokens, ...)
-        //                    $state.go(CONFIG.state.login);
-        //                    // ...
-        //                }
-        //            })
-        //            .catch(function(err){
-        //                $state.go(CONFIG.state.login);
-        //            })
-        //            .finally(function(){
-        //                // At this point the app is ready, there are no more critical process to run before user can use app.
-                        $rootScope.$emit(EVENTS.APP_READY); // firing an event upwards
-        //            });
-        //    }
-
-
+            $rootScope.$emit(EVENTS.APP_READY); // firing an event upwards
         }, 1000);
 
 
@@ -115,7 +84,7 @@ function run($ionicPlatform, $ionicConfig, $rootScope, $state, user, $localStora
             // Always go to welcome view on startup
             // It will check if user want to hide welcome. Then go to home. If user is not logged go to login
             $ionicHistory.nextViewOptions({ disableAnimate: true, disableBack: true });
-            if( $localStorage.has(STORAGE_KEYS.HIDE_WELCOME) && $localStorage.get(STORAGE_KEYS.HIDE_WELCOME) ){
+            if( $localStorage.has(STORAGE_KEYS.HIDE_WELCOME) && $localStorage.get(STORAGE_KEYS.HIDE_WELCOME, false) ){
                 $log.debug('Route welcome is bypassed as user want');
                 $state.go(CONFIG.state.home);
             }
@@ -154,16 +123,18 @@ function run($ionicPlatform, $ionicConfig, $rootScope, $state, user, $localStora
             
             // Authentication verification
             if(LOCAL_CONFIG.bypassLogin !== true){
-                if( (toState.data && toState.data.authRequired === true) && !AuthenticationService.isAuthenticated() ){
+                // policy is to require authentication except if specified as not
+                if(!(toState.data && toState.data.authRequired === false) && !authenticationService.isAuthenticated()){
                     // User is not authenticated
                     $log.debug('Route require authentication and user is not, redirected to ' + CONFIG.state.login);
                     event.preventDefault();
                     $state.go(CONFIG.state.login);
                 }
+
             }
             
             // Redirect user if he is already logged
-            if( (toState.data && toState.data.noAuthRequired === true) && (toState.name == CONFIG.state.login || toState.name == CONFIG.state.register) && AuthenticationService.isAuthenticated() ){
+            if( (toState.data && toState.data.accessibleWhenAuthenticated === true) && (toState.name == CONFIG.state.login || toState.name == CONFIG.state.register) && authenticationService.isAuthenticated() ){
                 $log.debug('Route ' + toState.name + ' is redirected because user is already logged');
                 event.preventDefault();
                 $state.go(CONFIG.state.home);
@@ -186,7 +157,7 @@ function run($ionicPlatform, $ionicConfig, $rootScope, $state, user, $localStora
          */
         function onUnexpectedError(event, data){
             if(!LOCAL_CONFIG.hideEventLog) $log.debug('event -> ', EVENTS.UNEXPECTED_ERROR);
-            ToastService.showLongBottom(MESSAGES.UNEXPECTED_ERROR);
+            toastService.showLongBottom(MESSAGES.UNEXPECTED_ERROR);
         }
 
         /*
@@ -194,9 +165,9 @@ function run($ionicPlatform, $ionicConfig, $rootScope, $state, user, $localStora
          */
         function onServerResponseUnauthenticated(event, data){
             if(!LOCAL_CONFIG.hideEventLog) $log.debug('event -> ', EVENTS.SERVER_UNAUTHENTICATED_ERROR);
-            ToastService.showLongBottom(MESSAGES.SERVER_UNAUTHENTICATED_ERROR);
+            toastService.showLongBottom(MESSAGES.SERVER_UNAUTHENTICATED_ERROR);
 
-            AuthenticationService.logoutLocal();
+            authenticationService.logout();
             // As the previous view / action thrown 401 error we should not have back button, because we cannot go to back view / action
             $ionicHistory.nextViewOptions({
                 disableBack: true
@@ -209,9 +180,13 @@ function run($ionicPlatform, $ionicConfig, $rootScope, $state, user, $localStora
          */
         function onServerAccessError(event, data){
             if(!LOCAL_CONFIG.hideEventLog) $log.debug('event -> ', EVENTS.SERVER_ACCESS_ERROR);
-            ToastService.showLongBottom(MESSAGES.SERVER_ACCESS_ERROR);
+            toastService.showLongBottom(MESSAGES.SERVER_ACCESS_ERROR);
         }
         
+        function onUserLoggedOut(event, data){
+            popupService.show(popupService.template.LOGGED_OUT);
+            $state.go(CONFIG.state.login);
+        }
     });
     
     

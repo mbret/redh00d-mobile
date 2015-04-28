@@ -7,6 +7,9 @@ angular.module('starter')
         // Typically the app is launched by OS, then cordova launch and then our app launch interval is thrown
         // after $ionicPlatform.ready and whatever we define.
         APP_READY: 'appReady',
+        
+        USER_LOGGED_OUT: 'userLoggedOut',
+        
         // This event should be called when an unexpected error happened
         // It concern an error that it's not normal and is out of control for the app. It's a critical error.
         // Server response error, server unreachable or invalid input are not this kind of error we are talking about.
@@ -27,7 +30,8 @@ angular.module('starter')
     // Use these constants to map API returns with local app.
     // It avoid to search and replace when changes are made on API side.
     .constant('MAPPERS', {
-        RESPONSE_ACCESS_TOKEN: 'token' // token json label for /auth
+        RESPONSE_ACCESS_TOKEN: 'token', // token json label for /auth
+        RESPONSE_CODE_E_EMAIL_ALREADY_TAKEN: 'E_EMAIL_ALREADY_TAKEN'
     })
     
     .constant('STORAGE_KEYS', {
