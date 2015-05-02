@@ -7,17 +7,26 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', [
+    'ng',
     'ionic',
     'ngCordova',
     'starter.routes',
     'starter.controllers',
     'starter.services'
 ])
-.run(run);
+    .run(initAppSettings)
+    .run(run);
 
 angular.module('starter.services', []);
 angular.module('starter.controllers', []);
 angular.module('starter.routes', []);
+
+
+function initAppSettings(APP_CONFIG, $localStorage, _){
+    if($localStorage.has('settings')){
+        _.merge(APP_CONFIG, $localStorage.getObject('settings', {}));
+    }
+}
 
 function run($ionicPlatform, popupService, $rootScope, $state, user, $localStorage, STORAGE_KEYS, CONFIG, LOCAL_CONFIG, $log, $ionicLoading, EVENTS, $ionicHistory, MESSAGES, toastService, authenticationService) {
 

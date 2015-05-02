@@ -47,15 +47,6 @@ function routes($stateProvider, $urlRouterProvider) {
             }
         })
         
-        // Main and default view
-        // Template based on a sidebar and custom content in the middle
-        .state('app', {
-            url: "/app",
-            abstract: true,
-            template: '<ion-nav-view></ion-nav-view>',
-            controller: 'AppCtrl'
-        })
-
         .state('login', {
             url: "/login",
             templateUrl: "templates/auth/login.html",
@@ -82,8 +73,22 @@ function routes($stateProvider, $urlRouterProvider) {
             template: "<ion-nav-view></ion-nav-view>",
             controller: 'LogoutCtrl'
         })
-        
 
+        .state('settings', {
+            url: '/settings',
+            templateUrl: 'templates/settings.html',
+            controller: 'SettingsCtrl'
+        })
+        
+        // Main and default view
+        // Template based on a sidebar and custom content in the middle
+        .state('app', {
+            url: "/app",
+            abstract: true,
+            template: '<ion-nav-view></ion-nav-view>',
+            controller: 'AppCtrl'
+        })
+        
         // Contacts list
         .state('app.contacts', {
             url: "/contacts",
