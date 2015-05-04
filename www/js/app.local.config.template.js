@@ -23,7 +23,14 @@
                 // Set your web service url here. The url of the web service is displayed when lifted.
                 apiUrl: 'https://localhost:1340',
 
-                allowCordorva: false
+                allowCordorva: false,
+                
+                // It can be useful to override the default home page. If you are working on contacts for example,
+                // you can set home to contacts to get on the view directly
+                state: {
+                //    home: 'contacts'
+                }
+                
             }
         });
 })();

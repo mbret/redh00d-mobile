@@ -80,36 +80,36 @@ function routes($stateProvider, $urlRouterProvider) {
             controller: 'SettingsCtrl'
         })
         
-        // Main and default view
-        // Template based on a sidebar and custom content in the middle
-        .state('app', {
-            url: "/app",
+        // Contacts parts
+        .state('contacts', {
             abstract: true,
-            template: '<ion-nav-view></ion-nav-view>',
-            controller: 'AppCtrl'
-        })
-        
-        // Contacts list
-        .state('app.contacts', {
-            url: "/contacts",
-            abstract: true,
-            templateUrl: "templates/contacts/tabs.html",
+            url: '/contacts',
+            templateUrl: 'templates/contacts/contacts.html',
             controller: 'ContactsCtrl'
         })
-        .state('app.contacts.list', {
-            url: '/contacts/list',
+        .state('contacts.list', {
+            url: "/list",
             views: {
-                'list': {
-                    templateUrl: "templates/contacts/list.html",
+                'list-tab': {
+                    templateUrl: "templates/contacts/contacts-list.html",
                     controller: 'ContactsListCtrl'
                 }
             }
         })
-        .state('app.contacts.groups', {
-            url: '/contacts/groups/:id',
+        .state('contacts.detail', {
+            url: '/detail',
             views: {
-                'groups': {
-                    templateUrl: "templates/contacts/groups.html",
+                'list-tab': {
+                    templateUrl: "templates/contacts/contacts-detail.html",
+                    controller: 'ContactsDetailCtrl'
+                }
+            }
+        })
+        .state('contacts.groups', {
+            url: "/groups",
+            views: {
+                'groups-tab': {
+                    templateUrl: "templates/contacts/contacts-groups.html",
                     controller: 'ContactsGroupsCtrl'
                 }
             }

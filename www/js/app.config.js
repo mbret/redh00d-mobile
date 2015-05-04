@@ -79,7 +79,13 @@ function configureCONFIG($provide, LOCAL_CONFIG, _) {
             login: 'login',
             register: 'register',
             forgotpassword: 'register',
-            welcome: 'welcome'
+            welcome: 'welcome',
+            contacts: {
+                list: 'contacts.list',
+                groups: 'contacts.groups',
+                detail: 'contacts.detail'
+            },
+            settings: 'settings'
         }
     };
     config = _.merge(config, LOCAL_CONFIG.config);
