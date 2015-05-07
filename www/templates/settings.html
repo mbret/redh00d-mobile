@@ -1,0 +1,36 @@
+<ion-view view-title="Settings" >
+
+    <ion-content class="padding">
+
+        <ul class="list">
+
+            <label class="item item-input item-label">
+                <span class="input-label">Setting 1</span>
+                <input type="text" ng-model="settings.setting_1">
+            </label>
+
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Age
+                </div>
+                <select>
+                    <option selected>Under 65</option>
+                    <option>65-74</option>
+                    <option>75+</option>
+                </select>
+            </label>
+
+            <li class="item item-toggle">
+                Setting 5
+                <label class="toggle toggle-positive">
+                    <input type="checkbox" value="on">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </li>
+
+        </ul>
+        
+    </ion-content>
+</ion-view>

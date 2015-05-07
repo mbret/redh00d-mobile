@@ -1,0 +1,15 @@
+<ion-view view-title="Contacts - list">
+    
+    <!--For now auto navigation is bugged and back button will not show, just force back button-->
+    <ion-nav-buttons side="left">
+        <button class="button back-button button-clear header-item" ui-sref="{{CONFIG.state.home}}">
+            <i class="icon ion-android-arrow-back"></i>
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content class="padding">
+        <p>
+            <a class="button icon icon-right ion-chevron-right" ui-sref="{{CONFIG.state.contacts.detail}}">Contact detail</a>
+        </p>
+    </ion-content>
+</ion-view>

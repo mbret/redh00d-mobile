@@ -3,6 +3,7 @@
 angular.module('starter.controllers')
     .controller('ContactsCtrl', ContactsCtrl)
     .controller('ContactsListCtrl', ContactsListCtrl)
+    .controller('ContactsDetailCtrl', ContactsDetailCtrl)
     .controller('ContactsGroupsCtrl', ContactsGroupsCtrl);
 
 ContactsCtrl.$inject = ['$scope', 'Events', '$ionicLoading'];
@@ -15,6 +16,12 @@ ContactsListCtrl.$inject = ['$scope', 'Events', '$ionicLoading'];
 function ContactsListCtrl($scope, Contacts, $ionicLoading) {
 
     $scope.contacts = Contacts.fetchAll();
+
+}
+
+ContactsDetailCtrl.$inject = ['$scope', 'Events', '$ionicLoading'];
+function ContactsDetailCtrl($scope, Contacts, $ionicLoading) {
+
 
 }
 

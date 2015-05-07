@@ -1,27 +1,27 @@
 <ion-view view-title="Register">
   <ion-content class="padding">
-    <form ng-submit="doRegister()">
+    <form name="loginRegister">
       <div class="list">
 
           <!--Inset form-->
           <div class="list list-inset">
               <label class="item item-input">
                   <i class="icon ion-search placeholder-icon"></i>
-                  <input type="text" placeholder="Email" ng-model="data.email">
+                  <input type="text" placeholder="Email" ng-model="data.email" ng-required="true">
               </label>
               <label class="item item-input">
                   <i class="icon ion-search placeholder-icon"></i>
-                  <input type="password" placeholder="Password" ng-model="data.password">
+                  <input type="password" placeholder="Password" ng-model="data.password" ng-required="true">
               </label>
           </div>
           
         <label class="item">
-            <button class="button button-block button-balanced" type="submit">Register</button>
+            <button class="button button-block button-balanced" ng-click="doRegister(loginRegister);">Register</button>
         </label>
       </div>
     </form>
 
-      <div class="text-center">
+      <div class="text-center padding">
           Already have an account? <a ui-sref="{{CONFIG.state.login}}" class="positive">Sign in!</a>
       </div>
   </ion-content>

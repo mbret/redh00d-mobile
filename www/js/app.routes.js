@@ -7,13 +7,21 @@ function routes($stateProvider, $urlRouterProvider) {
 
     // if none of the above states are matched, use this as the fallback
     // READ IT : when app is launching this route is called and is then viewed for a second while application take control
-    $urlRouterProvider.otherwise('welcome');
+    $urlRouterProvider.otherwise('home');
 
+    // If a route is accessible for user unauthenticated you must specified data.authRequired = false.
+    // The policy is in strict mod and need auth by default.
+    //
+    // If you want to block a view when user is logged use data.accessibleWhenAuthenticated = false. This setting is not strict
+    // so all routes will be accessible unless you set to false.
     $stateProvider
 
         .state('blank', {
             url: '/blank',
-            template: 'App is loading'
+            template: 'App is loading',
+            data: {
+                authRequired: false
+            }
         })
         
         // Welcome page
@@ -24,6 +32,9 @@ function routes($stateProvider, $urlRouterProvider) {
             onEnter: function($ionicHistory, $ionicNavBarDelegate, $state, CONFIG, $rootScope, $log){
                 //$ionicHistory.clearHistory();
                 //$ionicNavBarDelegate.showBackButton(false);
+            },
+            data: {
+                authRequired: false
             }
         })
         
@@ -36,21 +47,13 @@ function routes($stateProvider, $urlRouterProvider) {
             }
         })
         
-        // Main and default view
-        // Template based on a sidebar and custom content in the middle
-        .state('app', {
-            url: "/app",
-            abstract: true,
-            template: '<ion-nav-view></ion-nav-view>',
-            controller: 'AppCtrl'
-        })
-
         .state('login', {
             url: "/login",
             templateUrl: "templates/auth/login.html",
             controller: 'LoginCtrl',
             data: {
-                noAuthRequired: true
+                authRequired: false,
+                accessibleWhenAuthenticated: false
             }
         })
         
@@ -59,38 +62,54 @@ function routes($stateProvider, $urlRouterProvider) {
             templateUrl: "templates/auth/register.html",
             controller: 'RegisterCtrl',
             data: {
-                noAuthRequired: true
+                authRequired: false,
+                accessibleWhenAuthenticated: false
             }
         })
 
+        // A route exist for logout, this is a simple route without any display.
         .state('logout', {
             url: '/logout',
-            templateUrl: "<ion-nav-view></ion-nav-view>",
+            template: "<ion-nav-view></ion-nav-view>",
             controller: 'LogoutCtrl'
         })
-        
 
-        // Contacts list
-        .state('app.contacts', {
-            url: "/contacts",
+        .state('settings', {
+            url: '/settings',
+            templateUrl: 'templates/settings.html',
+            controller: 'SettingsCtrl'
+        })
+        
+        // Contacts parts
+        .state('contacts', {
             abstract: true,
-            templateUrl: "templates/contacts/tabs.html",
+            url: '/contacts',
+            templateUrl: 'templates/contacts/contacts.html',
             controller: 'ContactsCtrl'
         })
-        .state('app.contacts.list', {
-            url: '/contacts/list',
+        .state('contacts.list', {
+            url: "/list",
             views: {
-                'list': {
-                    templateUrl: "templates/contacts/list.html",
+                'list-tab': {
+                    templateUrl: "templates/contacts/contacts-list.html",
                     controller: 'ContactsListCtrl'
                 }
             }
         })
-        .state('app.contacts.groups', {
-            url: '/contacts/groups/:id',
+        .state('contacts.detail', {
+            url: '/detail',
             views: {
-                'groups': {
-                    templateUrl: "templates/contacts/groups.html",
+                'list-tab': {
+                    templateUrl: "templates/contacts/contacts-detail.html",
+                    controller: 'ContactsDetailCtrl'
+                }
+            }
+        })
+        .state('contacts.groups', {
+            url: "/groups",
+            views: {
+                'groups-tab': {
+                    templateUrl: "templates/contacts/contacts-groups.html",
                     controller: 'ContactsGroupsCtrl'
                 }
             }
