@@ -22,8 +22,9 @@ function EventsCtrl($scope, Events, $ionicLoading, $ionicHistory, $ionicSideMenu
     };
 
     $scope.goContacts = function(){
-        $state.go(CONFIG.state.contacts.list);
+        $state.go(CONFIG.state.contacts);
 
     }
+
 
 }
