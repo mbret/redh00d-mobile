@@ -21,7 +21,7 @@
                 <!--</ion-view>-->
                 <!-- head bar -->
                 <ion-header-bar class="bar bar-header bar-assertive">
-                    <button ng-click="toggleLeft()" class="button icon ion-navicon"></button>
+                    <button menu-toggle="left" class="button icon ion-navicon"></button>
                     <h1 class="title">Events</h1>
                     <button class="button">Edit</button>
                 </ion-header-bar>
@@ -53,9 +53,7 @@
                 </ion-header-bar>
                 <ion-content>
                     <ion-list>
-                        <ion-item nav-clear menu-close ng-click="goContacts()">
-                            Contacts
-                        </ion-item>
+                        <ion-item nav-clear menu-close ui-sref="{{CONFIG.state.contacts.list}}">Contacts</ion-item>
                     </ion-list>
                 </ion-content>
             </ion-side-menu>

@@ -15,16 +15,4 @@ function EventsCtrl($scope, Events, $ionicLoading, $ionicHistory, $ionicSideMenu
         var currentAuth = UserService.me();
     }, 5000);
 
-
-
-    $scope.toggleLeft = function() {
-        $ionicSideMenuDelegate.toggleLeft();
-    };
-
-    $scope.goContacts = function(){
-        $state.go(CONFIG.state.contacts);
-
-    }
-
-
 }
