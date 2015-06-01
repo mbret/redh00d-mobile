@@ -40,12 +40,23 @@ function routes($stateProvider, $urlRouterProvider) {
         
         .state('events',{
             url: '/events',
-            templateUrl: 'templates/events.html',
+            templateUrl: 'templates/events/events.html',
             controller: 'EventsCtrl',
             data: {
                 authRequired: true
             }
         })
+
+        .state('events.details',{
+                    url: '/details',
+                    templateUrl: 'templates/events/events-details.html',
+                    views: {
+                            'list-tab': {
+                               templateUrl: "templates/events/events-details.html",
+                               controller: 'EventsDetailCtrl'
+                                        }
+                            }
+                })
         
         .state('login', {
             url: "/login",
