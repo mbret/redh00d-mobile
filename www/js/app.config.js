@@ -85,9 +85,10 @@ function configureCONFIG($provide, LOCAL_CONFIG, _) {
                 groups: 'contacts.groups',
                 detail: 'contacts.detail'
             },
-            events: {
-                details : 'events.details',
-                events : 'events'
+            event: {
+                info: 'event.info',
+                drink: 'event.drink',
+                guest: 'event.guest'
             },
             settings: 'settings'
         }
