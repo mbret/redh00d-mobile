@@ -16,14 +16,6 @@ function routes($stateProvider, $urlRouterProvider) {
     // so all routes will be accessible unless you set to false.
     $stateProvider
 
-        .state('blank', {
-            url: '/blank',
-            template: 'App is loading',
-            data: {
-                authRequired: false
-            }
-        })
-        
         // Welcome page
         .state('welcome', {
             url: '/welcome',
