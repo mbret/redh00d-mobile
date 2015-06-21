@@ -32,7 +32,7 @@ function WelcomeCtrl($scope, $state, $ionicSlideBoxDelegate, CONFIG, $localStora
 
     // Called each time the slide changes
     $scope.onSlideChange = function(index) {
-        $scope.slideIndex = index;
+        $scope.data.slideIndex = index;
     };
     
     //$scope.onHideNextTimeChange = function(value){
