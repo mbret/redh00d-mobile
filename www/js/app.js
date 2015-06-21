@@ -12,8 +12,9 @@ angular.module('starter', [
         'ngCordova',
         'starter.routes',
         'starter.controllers',
-        'starter.services'
-    ])
+        'starter.services',
+        'modules.loader',
+])
     .run(initAppSettings)
     .run(run);
 
@@ -25,9 +26,8 @@ angular.module('starter.routes', []);
 // So we can load config from server or do some stuff before
 // ionic / angular job
 angular.element(document).ready(function() {
-    //angular.injector(['ng', 'starter']);
-    //var $ionicPlatform = initInjector.get("$ionicPlatform");
-    //console.log($ionicPlatform);
+
+    angular.injector(['modules.loader']).get('loaderService').show();
 
     setTimeout(function(){
 
@@ -36,7 +36,7 @@ angular.element(document).ready(function() {
         ionic.Platform.ready(function() {
             angular.bootstrap(document, ['starter']);
         });
-    }, 2000);
+    }, 1000); // @todo 1s to see loader in any way
 });
 
 
@@ -71,14 +71,13 @@ function initAppSettings(APP_CONFIG, $localStorage, _){
  * @param toastService
  * @param authenticationService
  */
-function run($ionicPlatform, loaderService, popupService, $rootScope, $state, user, $localStorage, STORAGE_KEYS, CONFIG, LOCAL_CONFIG, $log, $ionicLoading, EVENTS, $ionicHistory, MESSAGES, toastService, authenticationService) {
+function run($timeout, $ionicPlatform, loaderService, popupService, $rootScope, $state, user, $localStorage, STORAGE_KEYS, CONFIG, LOCAL_CONFIG, $log, $ionicLoading, EVENTS, $ionicHistory, MESSAGES, toastService, authenticationService) {
 
     /* -----------------------------------------------------
      *
      *          Run startup logic
      *
      *  ---------------------------------------------------- */
-
     // Inject config inside scope, in that way we can use state.foo for example inside html
     $rootScope.CONFIG = CONFIG;
 
@@ -106,21 +105,28 @@ function run($ionicPlatform, loaderService, popupService, $rootScope, $state, us
     $rootScope.$on('$stateChangeStart', onStateChangeStart);
     $rootScope.$on('$stateChangeError', onStateChangeError);
 
-    loaderService.hide();
 
     //$ionicHistory.clearHistory();
     //$ionicHistory.clearCache();
 
     // Always go to welcome view on startup
     // It will check if user want to hide welcome. Then go to home. If user is not logged go to login
+    var state = null;
     $ionicHistory.nextViewOptions({ disableAnimate: false, disableBack: true });
     if( $localStorage.has(STORAGE_KEYS.HIDE_WELCOME) && $localStorage.get(STORAGE_KEYS.HIDE_WELCOME, false) ){
         $log.debug('Route welcome is bypassed as user want');
-        $state.go(CONFIG.state.home);
+        state = CONFIG.state.home;
     }
     else{
-        $state.go(CONFIG.state.welcome);
+        state = CONFIG.state.welcome;
     }
+    // There is a bug (or maybe not) that make $state.go not working in run(). The route from the url is processed after this $state.go
+    // ex: if page is /events, $state.go('welcome') will occur and then $state.go('events') will happen and make previous $state not working
+    // The workaround is to use $timeout. It seems that the possible /events controller is not initialized so I guess it's ok for now.
+    $timeout(function(){
+        $state.go(state);
+        loaderService.hide();
+    });
 
     /* -----------------------------------------------------
      *
@@ -144,17 +150,14 @@ function run($ionicPlatform, loaderService, popupService, $rootScope, $state, us
         $ionicLoading.hide();
     }
 
-    /*
-     *
+    /**
+     * This events is thrown whenever the app redirect from a view to another view.
+     * This method ensure that:
+     *  - Authenticated user wont reach login page.
+     *  - Unauthenticated user wont reach routes that need authenticated user.
      */
     function onStateChangeStart(event, toState, toParams, fromState, fromParams){
         if(!LOCAL_CONFIG.hideEventLog) $log.debug('event -> $stateChangeStart -> from ' + fromState.name + ' to ' + toState.name);
-
-        // Prevent navigation to blank
-        if( toState.name == CONFIG.state.blank ){
-            $log.debug('Route blank is not accessible, event stopped');
-            event.preventDefault();
-        }
 
         // Authentication verification
         if(LOCAL_CONFIG.bypassLogin !== true){
@@ -165,7 +168,6 @@ function run($ionicPlatform, loaderService, popupService, $rootScope, $state, us
                 event.preventDefault();
                 $state.go(CONFIG.state.login);
             }
-
         }
 
         // Redirect user if he is already logged

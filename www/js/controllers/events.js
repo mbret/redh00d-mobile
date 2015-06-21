@@ -12,7 +12,6 @@ function EventsCtrl($scope, Events, $state, $ionicHistory, CONFIG, UserService) 
         var currentAuth = UserService.me();
     }, 5000);
 
-
     $scope.goContacts = function(){
         $state.go(CONFIG.state.contacts.list);
         

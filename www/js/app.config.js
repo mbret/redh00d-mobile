@@ -74,7 +74,6 @@ function configureCONFIG($provide, LOCAL_CONFIG, _) {
             me: apiUrl + '/helper/me'
         },
         state: {
-            blank: 'blank',
             home: 'events',
             login: 'login',
             register: 'register',

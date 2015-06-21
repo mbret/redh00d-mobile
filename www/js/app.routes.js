@@ -22,6 +22,7 @@ function routes($stateProvider, $urlRouterProvider) {
             templateUrl: 'templates/welcome.html',
             controller: 'WelcomeCtrl',
             onEnter: function($ionicHistory, $ionicNavBarDelegate, $state, CONFIG, $rootScope, $log){
+                console.log('ici');
                 //$ionicHistory.clearHistory();
                 //$ionicNavBarDelegate.showBackButton(false);
             },
