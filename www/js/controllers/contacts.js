@@ -9,10 +9,9 @@ angular.module('starter.controllers')
 ContactsCtrl.$inject = ['$scope', 'Events', '$ionicLoading'];
 function ContactsCtrl($scope, Contacts, $ionicLoading) {
 
-
 }
 
-ContactsListCtrl.$inject = ['$scope', 'Events', '$ionicLoading'];
+ContactsListCtrl.$inject = ['$scope', 'Contacts', '$ionicLoading'];
 function ContactsListCtrl($scope, Contacts, $ionicLoading) {
 
     $scope.contacts = Contacts.fetchAll();
