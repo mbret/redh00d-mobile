@@ -5,11 +5,6 @@ angular.module('starter')
     .constant('_', window._)
 
     .constant('EVENTS', {
-        // The APP_READY event should be called when the app is ready to use for the user.
-        // Typically the app is launched by OS, then cordova launch and then our app launch interval is thrown
-        // after $ionicPlatform.ready and whatever we define.
-        APP_READY: 'appReady',
-
         USER_LOGGED_OUT: 'userLoggedOut',
 
         // This event should be called when an unexpected error happened
@@ -52,7 +47,7 @@ angular.module('starter')
  * This object is used through the app to store the current logged user.
  */
 function configureUser($provide) {
-    $provide.constant('user', {
+    $provide.value('user', {
         authenticated: false // pass to true to bypass login
     });
 }
@@ -71,11 +66,15 @@ function configureCONFIG($provide, LOCAL_CONFIG, _) {
             login: apiUrl + '/auth/login',
             register: apiUrl + '/auth/register',
             facebookAuth: apiUrl + '/auth/facebook',
-            me: apiUrl + '/helper/me'
+            me: apiUrl + '/helper/me',
+            contacts: {
+                fetchAll: '/users/:userid/friends'
+            }
         },
         state: {
             home: 'events',
             login: 'login',
+            logout: 'logout',
             register: 'register',
             forgotpassword: 'register',
             welcome: 'welcome',

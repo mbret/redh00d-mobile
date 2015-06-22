@@ -1,13 +1,32 @@
 <ion-view view-title="Contacts - list">
     
     <!--For now auto navigation is bugged and back button will not show, just force back button-->
-    <ion-nav-buttons side="left">
-        <button class="button back-button button-clear header-item" ui-sref="{{CONFIG.state.home}}">
-            <i class="icon ion-android-arrow-back"></i>
-        </button>
-    </ion-nav-buttons>
+    <!--<ion-nav-buttons side="left">-->
+        <!--<button class="button back-button button-clear header-item" ng-click="goBack()">-->
+            <!--<i class="icon ion-android-arrow-back"></i>-->
+        <!--</button>-->
+    <!--</ion-nav-buttons>-->
 
     <ion-content class="padding">
+
+        <ion-refresher
+                pulling-text="Pull to refresh..."
+                on-refresh="doRefresh()">
+        </ion-refresher>
+
+        <div ng-show="data.onLoading" class="text-center">
+            <ion-spinner icon="android"></ion-spinner>
+        </div>
+
+        <div ng-show="data.onError == true">
+            <div class="card">
+                <a class="item item-icon-left assertive" href="#">
+                    <i class="icon ion-close-round"></i>
+                    Error while fetching data
+                </a>
+            </div>
+        </div>
+
         <ion-list>
             <ion-item ng-repeat="item in contacts">
                 {{item.title}}<br>

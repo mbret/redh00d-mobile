@@ -43,6 +43,7 @@ function httpResponseInterceptor($q, $injector, MESSAGES, EVENTS, CONFIG, $log, 
 
             // Intercept unauthenticated response. We need to redirect to login because it's not normal to be unauthenticated
             if(rejection.status === 401){
+                $log.info('httpResponseInterceptor:responseError: Unauthorized response');
                 $rootScope.$broadcast(EVENTS.SERVER_UNAUTHENTICATED_ERROR);
             }
             

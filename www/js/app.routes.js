@@ -62,6 +62,7 @@ function routes($stateProvider, $urlRouterProvider) {
         // A route exist for logout, this is a simple route without any display.
         .state('logout', {
             url: '/logout',
+            cache: false, // the route is init each time
             template: "<ion-nav-view></ion-nav-view>",
             controller: 'LogoutCtrl'
         })

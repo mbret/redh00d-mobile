@@ -1,26 +1,30 @@
-'use strict';
+(function(){
 
-angular.module('starter.services')
-    .factory('Contacts', ContactsService);
+    'use strict';
 
-function ContactsService(){
+    angular.module('starter.services')
+        .factory('Contacts', ContactsService);
 
-    return {
+    function ContactsService($http, $log, CONFIG, EVENTS, $q, $rootScope){
 
-        fetchAll: function(){
-            return [
-                { title: 'Contact 1', description: 'First description', date: null },
-                { title: 'Contact 2', description: 'Another description', date: null },
-                { title: 'Contact 3', description: 'Another description', date: null },
-                { title: 'Contact 4', description: 'Another description', date: null },
-                { title: 'Contact 5', description: 'Another description', date: null },
-                { title: 'Contact 6', description: 'Another description', date: null },
-                { title: 'Contact 7', description: 'Another description', date: null },
-                { title: 'Contact 8', description: 'Another description', date: null },
-                { title: 'Contact 9', description: 'Another another description', date: null }
-            ];
-        }
+        return {
 
-    };
-    
-}
+            fetchAll: function(userId){
+                return $http.get(CONFIG.route.contacts.fetchAll.replace(':userid', userId))
+                    .then(function(data) {
+                        $log.debug('ContactsService:fetchAll', data.data);
+                        var widgets = data.data;
+                        return widgets;
+                    })
+                    .catch(function(err) {
+                        $log.warn('ContactsService:fetchAll: Failure loading widgets');
+                        $rootScope.$broadcast(EVENTS.UNEXPECTED_ERROR);
+                        return $q.reject(err);
+                    });
+            }
+
+        };
+
+    }
+
+})();

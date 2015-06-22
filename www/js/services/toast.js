@@ -33,10 +33,10 @@ function toastService($cordovaToast, $log, CONFIG){
             }
             
             if(!CONFIG.allowCordorva){
-                $log.info('toastService -> $cordovaToast unavailable with WebView -> MESSAGE: ' + message);
+                $log.warn('toastService -> ' + message + ' [cordova deactivated]');
                 return;
             }
-            
+
             return fn(message);
         }
     };

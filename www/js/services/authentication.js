@@ -77,7 +77,7 @@ function authenticationService($http, CONFIG, $q, $log, $localStorage, UserServi
                             $rootScope.$broadcast(EVENTS.UNEXPECTED_ERROR);
                             return $q.reject();
                         }
-                        return data;
+                        return data.user;
                     });
                 })
                 .catch(function (err) {
@@ -87,12 +87,10 @@ function authenticationService($http, CONFIG, $q, $log, $localStorage, UserServi
         },
         
         logout: function logout() {
-            _logoutLocal();
             $log.debug('authentication -> logout');
-            $rootScope.$broadcast(EVENTS.USER_LOGGED_OUT);
+            _logoutLocal();
             return $q.when();
         }
-        
         
     };
 
@@ -112,6 +110,6 @@ function authenticationService($http, CONFIG, $q, $log, $localStorage, UserServi
     
     function _cleanLocalTraces(){
         $localStorage.delete('access_token');
-        $log.debug('UserService.cleanLocalTraces -> user traces deleted');
+        $log.debug('authenticationService:_cleanLocalTraces -> user traces deleted');
     }
 }
