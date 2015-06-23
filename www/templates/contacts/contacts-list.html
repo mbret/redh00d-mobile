@@ -7,7 +7,7 @@
         <!--</button>-->
     <!--</ion-nav-buttons>-->
 
-    <ion-content class="padding">
+    <ion-content class="">
 
         <ion-refresher
                 pulling-text="Pull to refresh..."
@@ -28,9 +28,15 @@
         </div>
 
         <ion-list>
-            <ion-item ng-repeat="item in contacts">
-                {{item.title}}<br>
-                {{item.description}}
+            <ion-item
+                    ng-repeat="contact in data.contacts"
+                    item="contact"
+                    ui-sref="{{CONFIG.state.contacts.detail}}({id: contact.id})"
+                    class="item-button-right">
+                {{contact.firstName}} {{contact.lastName}}
+                <button class="button button-positive">
+                    <i class="icon ion-person"></i>
+                </button>
             </ion-item>
         </ion-list>
     </ion-content>

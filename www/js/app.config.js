@@ -68,7 +68,10 @@ function configureCONFIG($provide, LOCAL_CONFIG, _) {
             facebookAuth: apiUrl + '/auth/facebook',
             me: apiUrl + '/helper/me',
             contacts: {
-                fetchAll: '/users/:userid/friends'
+                fetchAll: '/users/:userid/friends',
+            },
+            users: {
+                fetch: '/users/:id'
             }
         },
         state: {

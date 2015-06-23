@@ -90,7 +90,7 @@ function routes($stateProvider, $urlRouterProvider) {
             }
         })
         .state('contacts.detail', {
-            url: '/detail',
+            url: '/detail/:id',
             views: {
                 'list-tab': {
                     templateUrl: "templates/contacts/contacts-detail.html",

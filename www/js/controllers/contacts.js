@@ -29,7 +29,7 @@
         console.log($ionicHistory.backView());
         setTimeout(function(){
             Contacts
-                .fetchAll()
+                .fetchAll(user.id)
                 .then(function(contacts){
                     $scope.data.contacts = contacts;
                 })
@@ -45,7 +45,7 @@
             $scope.data.onError = false;
             setTimeout(function(){
                 Contacts
-                    .fetchAll()
+                    .fetchAll(user.id)
                     .then(function(contacts){
                         $scope.data.contacts = contacts;
                     })
@@ -57,7 +57,7 @@
                         // Stop the ion-refresher from spinning
                         $scope.$broadcast('scroll.refreshComplete');
                     });
-            }, 150000);
+            }, 1500);
         };
 
         $scope.goBack = function() {
@@ -65,10 +65,27 @@
         };
     }
 
-    ContactsDetailCtrl.$inject = ['$scope', 'Events', '$ionicLoading'];
-    function ContactsDetailCtrl($scope, Contacts, $ionicLoading) {
+    ContactsDetailCtrl.$inject = ['$scope', 'Contacts', '$ionicLoading', '$stateParams', 'user'];
+    function ContactsDetailCtrl($scope, Contacts, $ionicLoading, $stateParams, user) {
+        var id = $stateParams.id;
 
+        $scope.data = {
+            onError: false,
+            onLoading: true,
+            contact: null
+        };
 
+        Contacts
+            .fetch(id)
+            .then(function(contact){
+                $scope.data.contact = contact;
+            })
+            .catch(function(err){
+                $scope.data.onError = true;
+            })
+            .finally(function(){
+                $scope.data.onLoading = false;
+            });
     }
 
     ContactsGroupsCtrl.$inject = ['$scope', 'Events', '$ionicLoading'];

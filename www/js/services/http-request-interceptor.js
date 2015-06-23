@@ -21,7 +21,7 @@ function httpRequestInterceptor($rootScope, $log, CONFIG, $localStorage, EVENTS,
     
     return {
         request: function (config) {
-            $log.debug('httpRequestInterceptor:request: /' + config.method + ' ' + config.url);
+
             // log only api requests
             if ( isApiRequest(config) ) $log.debug('httpRequestInterceptor:request: /' + config.method + ' ' + config.url);
             
