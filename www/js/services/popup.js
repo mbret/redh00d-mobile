@@ -26,7 +26,14 @@ function popupService($ionicPopup){
             REGISTERED: 3,
             LOGGED_OUT: 4
         },
-        
+
+        /**
+         *
+         * @param template optional
+         * @param title
+         * @param message
+         * @returns {*}
+         */
         show: function(template, title, message){
             return this._show(title, message, template, $ionicPopup.alert);
         },

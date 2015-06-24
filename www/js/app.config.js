@@ -28,7 +28,20 @@ angular.module('starter')
     // It avoid to search and replace when changes are made on API side.
     .constant('MAPPERS', {
         RESPONSE_ACCESS_TOKEN: 'token', // token json label for /auth
-        RESPONSE_CODE_E_EMAIL_ALREADY_TAKEN: 'E_EMAIL_ALREADY_TAKEN'
+    })
+
+    /**
+     * The API constant provide all constant that are share between app and api server to communicate.
+     * For example the api return some error code. This constant provide same error code constant to match.
+     * In this way we just set one time on api size and use it in app.
+     * @todo load ERROR_CODE from server
+     */
+    .constant('API', {
+        ERROR_CODE: {
+            E_EMAIL_ALREADY_TAKEN: 'E_EMAIL_ALREADY_TAKEN',
+            E_PASSWORD_RESET_NO_PASSWORD_SET_YET: 'E_PASSWORD_RESET_NO_PASSWORD_SET_YET',
+            E_EMAIL_DOES_NOT_BELONG_TO_SOMEONE: 'E_EMAIL_DOES_NOT_BELONG_TO_SOMEONE'
+        }
     })
 
     .constant('STORAGE_KEYS', {
@@ -65,6 +78,7 @@ function configureCONFIG($provide, LOCAL_CONFIG, _) {
         route: {
             login: apiUrl + '/auth/login',
             register: apiUrl + '/auth/register',
+            resetPassword: apiUrl + '/users/:email/password-reset',
             facebookAuth: apiUrl + '/auth/facebook',
             me: apiUrl + '/helper/me',
             contacts: {
@@ -79,7 +93,7 @@ function configureCONFIG($provide, LOCAL_CONFIG, _) {
             login: 'login',
             logout: 'logout',
             register: 'register',
-            forgotpassword: 'register',
+            credentialLost: 'credential-lost',
             welcome: 'welcome',
             contacts: {
                 list: 'contacts.list',

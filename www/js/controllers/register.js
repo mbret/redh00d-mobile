@@ -3,7 +3,7 @@
 angular.module('starter.controllers')
     .controller('RegisterCtrl', RegisterCtrl);
 
-function RegisterCtrl($scope, CONFIG, $state, user, MAPPERS, popupService, toastService, authenticationService) {
+function RegisterCtrl($scope, CONFIG, $state, user, MAPPERS, API, popupService, toastService, authenticationService) {
 
     $scope.data = {
         email: 'user@user.com',
@@ -29,7 +29,7 @@ function RegisterCtrl($scope, CONFIG, $state, user, MAPPERS, popupService, toast
                     // Bad request
                     if(err && err.status && err.status === 400){
                         // email taken
-                        if(err.data && err.data.code === MAPPERS.RESPONSE_CODE_E_EMAIL_ALREADY_TAKEN){
+                        if(err.data && err.data.code === API.ERROR_CODE.E_EMAIL_ALREADY_TAKEN){
                             popupService.show(popupService.template.EMAIL_ALREADY_TAKEN);
                         }
                         else{

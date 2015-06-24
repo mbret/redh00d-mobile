@@ -59,6 +59,16 @@ function routes($stateProvider, $urlRouterProvider) {
             }
         })
 
+        .state('credential-lost', {
+            url: '/credential-lost',
+            templateUrl: 'templates/auth/credential-lost.html',
+            controller: 'CredentialLostCtrl',
+            data: {
+                authRequired: false,
+                accessibleWhenAuthenticated: false
+            }
+        })
+
         // A route exist for logout, this is a simple route without any display.
         .state('logout', {
             url: '/logout',

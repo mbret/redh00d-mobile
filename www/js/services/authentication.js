@@ -42,7 +42,7 @@ function authenticationService($http, CONFIG, $q, $log, $localStorage, UserServi
                         // We have an unexpected error here, the user should be logged!
                         // also note that the user could be logged but .me() method thrown a error ..
                         if(!data){
-                            $rootScope.$broadcast(EVENTS.UNEXPECTED_ERROR);
+                            //$rootScope.$broadcast(EVENTS.UNEXPECTED_ERROR);
                             return $q.reject();
                         }
                         return data;
@@ -74,7 +74,7 @@ function authenticationService($http, CONFIG, $q, $log, $localStorage, UserServi
                         // We have an unexpected error here, the user should be logged!
                         // also note that the user could be logged but .me() method thrown a error ..
                         if(!data){
-                            $rootScope.$broadcast(EVENTS.UNEXPECTED_ERROR);
+                            //$rootScope.$broadcast(EVENTS.UNEXPECTED_ERROR);
                             return $q.reject();
                         }
                         return data.user;

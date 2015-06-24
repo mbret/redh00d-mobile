@@ -21,7 +21,7 @@ function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicH
     $scope.doLogin = function(form, provider) {
 
         if(form.$valid === false){
-            popupService.badForm();
+            popupService.show(popupService.template.BAD_FORM);
         }
         else{
             // Login with credentials

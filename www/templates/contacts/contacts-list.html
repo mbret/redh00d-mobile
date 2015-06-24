@@ -1,4 +1,4 @@
-<ion-view view-title="Contacts - list">
+<ion-view view-title="Contacts">
     
     <!--For now auto navigation is bugged and back button will not show, just force back button-->
     <!--<ion-nav-buttons side="left">-->
@@ -6,6 +6,10 @@
             <!--<i class="icon ion-android-arrow-back"></i>-->
         <!--</button>-->
     <!--</ion-nav-buttons>-->
+
+    <ion-nav-buttons side="right">
+        <button class="button icon ion-person-add button-clear" ng-click="goBack()"></button>
+    </ion-nav-buttons>
 
     <ion-content class="">
 
@@ -19,12 +23,10 @@
         </div>
 
         <div ng-show="data.onError == true">
-            <div class="card">
-                <a class="item item-icon-left assertive" href="#">
-                    <i class="icon ion-close-round"></i>
-                    Error while fetching data
-                </a>
-            </div>
+            <p class="assertive padding text-center" href="#">
+                <i class="icon ion-close-round"></i>
+                Error while fetching data
+            </p>
         </div>
 
         <ion-list>
