@@ -97,7 +97,10 @@ function configureCONFIG($provide, LOCAL_CONFIG, _) {
             welcome: 'welcome',
             contacts: {
                 list: 'contacts.list',
-                groups: 'contacts.groups',
+                groups: {
+                    list: 'contacts.groupsList',
+                    create: 'contacts.groupsCreate'
+                },
                 detail: 'contacts.detail'
             },
             settings: 'settings'

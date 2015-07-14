@@ -108,15 +108,47 @@ function routes($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state('contacts.groups', {
-            url: "/groups",
+        .state('contacts.create', {
+            url: '/create',
             views: {
-                'groups-tab': {
-                    templateUrl: "templates/contacts/contacts-groups.html",
-                    controller: 'ContactsGroupsCtrl'
+                'list-tab': {
+                    templateUrl: "templates/contacts/contacts-create.html",
+                    controller: 'ContactsDetailCtrl'
                 }
             }
         })
+        //.state('contacts.groups', {
+        //    url: "/groups",
+        //    abstract: true,
+        //    views: {
+        //        'groups-tab': {
+        //            template: "<ion-nav-view ></ion-nav-view>",
+        //            controller: 'ContactsGroupsCtrl'
+        //        }
+        //    }
+        //})
+        .state('contacts.groupsList', {
+            url: "/groups/list",
+            views: {
+                'groups-tab': {
+                    templateUrl: "templates/contacts/contacts-groups-list.html",
+                    controller: 'ContactsGroupsDetailCtrl'
+                }
+            },
+            //templateUrl: "templates/contacts/contacts-groups-list.html",
+            //controller: 'ContactsGroupsDetailCtrl'
+        })
+        .state('contacts.groupsCreate', {
+            url: "/groups/create",
+            views: {
+                'groups-tab': {
+                    templateUrl: "templates/contacts/contacts-groups-create.html",
+                    controller: 'ContactsGroupsCreateCtrl'
+                }
+            },
+            //templateUrl: "templates/contacts/contacts-groups-create.html",
+            //controller: 'ContactsGroupsCreateCtrl'
+        });
 
 
 }

@@ -44,7 +44,6 @@
         }, 1000); // @todo 1s to see loader in any way
     });
 
-
     /**
      *
      * @param APP_CONFIG
@@ -86,7 +85,11 @@
      * @param toastService
      * @param authenticationService
      */
-    function run($timeout, $ionicPlatform, loaderService, popupService, $rootScope, $state, user, $localStorage, STORAGE_KEYS, CONFIG, LOCAL_CONFIG, $log, $ionicLoading, EVENTS, $ionicHistory, MESSAGES, toastService, authenticationService) {
+    function run($timeout, $ionicPlatform, APP_CONFIG, loaderService, popupService, $rootScope, $state, user, $localStorage, STORAGE_KEYS, CONFIG, LOCAL_CONFIG, $log, $ionicLoading, EVENTS, $ionicHistory, MESSAGES, toastService, authenticationService) {
+
+        console.info('Here is the global config', CONFIG);
+        console.info('Here is the local config', LOCAL_CONFIG);
+        console.info('Here is the app settings', APP_CONFIG);
 
         /* -----------------------------------------------------
          *

@@ -44,7 +44,9 @@
                         $rootScope.$broadcast(EVENTS.UNEXPECTED_ERROR);
                         return $q.reject(err);
                     });
-            }
+            },
+
+
 
         };
 

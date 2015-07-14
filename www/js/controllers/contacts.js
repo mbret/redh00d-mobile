@@ -5,11 +5,13 @@
         .controller('ContactsCtrl', ContactsCtrl)
         .controller('ContactsListCtrl', ContactsListCtrl)
         .controller('ContactsDetailCtrl', ContactsDetailCtrl)
-        .controller('ContactsGroupsCtrl', ContactsGroupsCtrl);
+        .controller('ContactsGroupsCtrl', ContactsGroupsCtrl)
+        .controller('ContactsGroupsDetailCtrl', ContactsGroupsDetailCtrl)
+        .controller('ContactsGroupsCreateCtrl', ContactsGroupsCreateCtrl);
 
     ContactsCtrl.$inject = ['$scope', 'Events', '$ionicLoading'];
     function ContactsCtrl($scope, Contacts, $ionicLoading) {
-
+        console.log('ContactsCtrl');
     }
 
     /**
@@ -88,15 +90,36 @@
             });
     }
 
-    ContactsGroupsCtrl.$inject = ['$scope', 'Events', '$ionicLoading'];
-    function ContactsGroupsCtrl($scope, Contacts, $ionicLoading) {
+    ContactsGroupsCtrl.$inject = ['$scope', 'Events', '$ionicLoading', '$state', 'CONFIG'];
+    function ContactsGroupsCtrl($scope, Contacts, $ionicLoading, $state, CONFIG) {
+        console.log('salut');
+    }
+
+    ContactsGroupsDetailCtrl.$inject = ['$scope', 'Events', '$ionicLoading', '$state', 'CONFIG'];
+    function ContactsGroupsDetailCtrl($scope, Contacts, $ionicLoading, $state, CONFIG) {
         console.log('ContactsGroupsCtrl');
         $scope.groups = [
             { name: 'Friends', id: 1 },
             { name: 'Family', id: 2 },
             { name: 'Coworkers', id: 3 },
             { name: 'Others', id: 4 },
-        ]
+        ];
+
+        $scope.createGroup = function(){
+            $state.go(CONFIG.state.contacts.groups.create);
+        }
+    }
+
+    ContactsGroupsCreateCtrl.$inject = ['$scope', 'Events', '$ionicLoading'];
+    function ContactsGroupsCreateCtrl($scope, Contacts, $ionicLoading, $state) {
+        console.log('ContactsGroupsCreateCtrl');
+
+        // Only called when group is valid
+        $scope.createGroup = function(group){
+            console.log(group);
+
+        }
 
     }
+
 })();

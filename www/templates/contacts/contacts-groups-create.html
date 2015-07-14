@@ -1,0 +1,19 @@
+<ion-view view-title="Groups creation">
+
+    <!--<ion-nav-buttons side="right">-->
+        <!--<button class="button icon ion-plus-circled button-clear" ng-click="goBack()"></button>-->
+    <!--</ion-nav-buttons>-->
+
+    <ion-content class="padding">
+        <div class="list list-inset">
+            <form ng-submit="createGroup(group)">
+                <label class="item item-input">
+                    <input type="text" placeholder="Group name" ng-model="group.name" required>
+                </label>
+                <button class="button button-block button-positive" type="submit">
+                    Create group
+                </button>
+            </form>
+        </div>
+    </ion-content>
+</ion-view>
