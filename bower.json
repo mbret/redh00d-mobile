@@ -8,6 +8,6 @@
   },
   "dependencies": {
     "ngCordova": "~0.1.14-alpha",
-    "lodash": "~3.9.3",
+    "lodash": "~3.9.3"
   }
 }
