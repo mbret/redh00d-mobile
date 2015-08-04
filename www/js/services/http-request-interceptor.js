@@ -23,12 +23,9 @@ function httpRequestInterceptor($rootScope, $log, CONFIG, $localStorage, EVENTS,
         request: function (config) {
 
             // log only api requests
-<<<<<<< HEAD
-            if ( isApiRequest(config) ) $log.debug('httpRequestInterceptor -> request -> /' + config.method + ' ' + config.url);
-=======
+
             if ( isApiRequest(config) ) $log.debug('httpRequestInterceptor:request: /' + config.method + ' ' + config.url);
->>>>>>> 15ea26cd3e485a3c285cb87f337a182050366374
-            
+
             config.headers = config.headers || {};
 
             // pass access_token to each request (only for api request)
