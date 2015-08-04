@@ -1,5 +1,11 @@
 <ion-view view-title="Contacts - detail">
     <ion-content class="padding">
-        <h1>This is contact detail.</h1>
+
+        <div class="item item-avatar">
+            <i class="icon ion-person"></i>
+            <h2>{{data.contact.firstName}} {{data.contact.lastName}}</h2>
+            <p>{{data.contact.email}}</p>
+        </div>
+
     </ion-content>
 </ion-view>

@@ -8,11 +8,11 @@
     <!--<ion-content class="padding">-->
 
         <ion-tabs class="tabs-positive tabs-icon-top slide-left-right-ios7">
-            <ion-tab title="Contacts" icon="ion-person" ui-sref="contacts.list">
+            <ion-tab title="Contacts" icon="ion-person" ui-sref="{{CONFIG.state.contacts.list}}">
                 <ion-nav-view name="list-tab"></ion-nav-view>
             </ion-tab>
 
-            <ion-tab title="Groups" icon="ion-person-stalker" ui-sref="contacts.groups">
+            <ion-tab title="Groups" icon="ion-person-stalker" ui-sref="{{CONFIG.state.contacts.groups.list}}">
                 <ion-nav-view name="groups-tab"></ion-nav-view>
             </ion-tab>
         </ion-tabs>

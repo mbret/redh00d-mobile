@@ -7,7 +7,7 @@ LoginCtrl.$injector = ['$rootScope', '$scope', '$log', 'popupService', 'user', '
 function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicHistory, $cordovaFacebook, authenticationService, CONFIG, $localStorage, UserService, $cordovaOauth, $cordovaInAppBrowser) {
 
     $scope.data = {
-        email: 'user@fake.com',
+        email: 'user@user.com',
         password: 'password'
     };
 
@@ -21,15 +21,17 @@ function LoginCtrl($rootScope, $scope, $log, popupService, user, $state, $ionicH
     $scope.doLogin = function(form, provider) {
 
         if(form.$valid === false){
-            popupService.badForm();
+            popupService.show(popupService.template.BAD_FORM);
         }
         else{
             // Login with credentials
             if(!provider){
                 authenticationService.login($scope.data.email, $scope.data.password)
                     .then(function(data){
-                        angular.extend(user, data);
+                        $log.info('LoginCtrl:doLogin: user:', data);
 
+                        user = _.merge(user, data);
+                        $localStorage.setObject('user', user);
                         $ionicHistory.nextViewOptions({ disableBack: true });
                         $state.go(CONFIG.state.home);
                     })

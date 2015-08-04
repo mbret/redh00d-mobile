@@ -28,3 +28,6 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 // Include general style for app
 @import "style";
+
+// Internal modules
+@import "../www/js/modules/loader/loader";

@@ -23,13 +23,17 @@ function httpRequestInterceptor($rootScope, $log, CONFIG, $localStorage, EVENTS,
         request: function (config) {
 
             // log only api requests
+<<<<<<< HEAD
             if ( isApiRequest(config) ) $log.debug('httpRequestInterceptor -> request -> /' + config.method + ' ' + config.url);
+=======
+            if ( isApiRequest(config) ) $log.debug('httpRequestInterceptor:request: /' + config.method + ' ' + config.url);
+>>>>>>> 15ea26cd3e485a3c285cb87f337a182050366374
             
             config.headers = config.headers || {};
-            
+
             // pass access_token to each request (only for api request)
-            if ( config.url.indexOf(CONFIG.apiUrl) === 0 && $localStorage.has('access_token')) {
-                $log.debug('httpRequestInterceptor -> request -> access_token injected : ' + $localStorage.get('access_token').substring(0, 30) + '****');
+            if ( isApiRequest(config) && $localStorage.has('access_token')) {
+                $log.info('httpRequestInterceptor:request: Request made to api, access token detected and injected in header. ' + $localStorage.get('access_token').substring(0, 30) + '****');
                 config.headers.Authorization = 'JWT ' + $localStorage.get('access_token');
             }
 

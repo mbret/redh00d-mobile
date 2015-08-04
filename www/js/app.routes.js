@@ -16,14 +16,6 @@ function routes($stateProvider, $urlRouterProvider) {
     // so all routes will be accessible unless you set to false.
     $stateProvider
 
-        .state('blank', {
-            url: '/blank',
-            template: 'App is loading',
-            data: {
-                authRequired: false
-            }
-        })
-        
         // Welcome page
         .state('welcome', {
             url: '/welcome',
@@ -117,9 +109,20 @@ function routes($stateProvider, $urlRouterProvider) {
             }
         })
 
+        .state('credential-lost', {
+            url: '/credential-lost',
+            templateUrl: 'templates/auth/credential-lost.html',
+            controller: 'CredentialLostCtrl',
+            data: {
+                authRequired: false,
+                accessibleWhenAuthenticated: false
+            }
+        })
+
         // A route exist for logout, this is a simple route without any display.
         .state('logout', {
             url: '/logout',
+            cache: false, // the route is init each time
             template: "<ion-nav-view></ion-nav-view>",
             controller: 'LogoutCtrl'
         })
@@ -147,7 +150,7 @@ function routes($stateProvider, $urlRouterProvider) {
             }
         })
         .state('contacts.detail', {
-            url: '/detail',
+            url: '/detail/:id',
             views: {
                 'list-tab': {
                     templateUrl: "templates/contacts/contacts-detail.html",
@@ -155,14 +158,48 @@ function routes($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state('contacts.groups', {
-            url: "/groups",
+        .state('contacts.create', {
+            url: '/create',
             views: {
-                'groups-tab': {
-                    templateUrl: "templates/contacts/contacts-groups.html",
-                    controller: 'ContactsGroupsCtrl'
+                'list-tab': {
+                    templateUrl: "templates/contacts/contacts-create.html",
+                    controller: 'ContactsDetailCtrl'
                 }
             }
+
+        })
+        //.state('contacts.groups', {
+        //    url: "/groups",
+        //    abstract: true,
+        //    views: {
+        //        'groups-tab': {
+        //            template: "<ion-nav-view ></ion-nav-view>",
+        //            controller: 'ContactsGroupsCtrl'
+        //        }
+        //    }
+        //})
+        .state('contacts.groupsList', {
+            url: "/groups/list",
+            views: {
+                'groups-tab': {
+                    templateUrl: "templates/contacts/contacts-groups-list.html",
+                    controller: 'ContactsGroupsDetailCtrl'
+                }
+            },
+            //templateUrl: "templates/contacts/contacts-groups-list.html",
+            //controller: 'ContactsGroupsDetailCtrl'
+        })
+        .state('contacts.groupsCreate', {
+            url: "/groups/create",
+            views: {
+                'groups-tab': {
+                    templateUrl: "templates/contacts/contacts-groups-create.html",
+                    controller: 'ContactsGroupsCreateCtrl'
+                }
+            },
+            //templateUrl: "templates/contacts/contacts-groups-create.html",
+            //controller: 'ContactsGroupsCreateCtrl'
         });
+
 
 }

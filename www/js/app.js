@@ -1,45 +1,101 @@
-'use strict';
+(function(){
 
-// Ionic Starter App
+    'use strict';
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.controllers' is found in controllers.js
-angular.module('starter', [
-    'ng',
-    'ionic',
-    'ngCordova',
-    'starter.routes',
-    'starter.controllers',
-    'starter.services'
-])
-    .run(initAppSettings)
-    .run(run);
+    console.info(displayConsoleWelcomeMessage());
 
-angular.module('starter.services', []);
-angular.module('starter.controllers', []);
-angular.module('starter.routes', []);
+    // Ionic Starter App
 
+    // angular.module is a global place for creating, registering and retrieving Angular modules
+    // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
+    // the 2nd parameter is an array of 'requires'
+    // 'starter.controllers' is found in controllers.js
+    angular.module('starter', [
+        'ng',
+        'ionic',
+        'ngCordova',
+        'starter.routes',
+        'starter.controllers',
+        'starter.services',
+        'modules.loader',
+    ])
+        .run(initAppSettings)
+        .run(initUser)
+        .run(run);
 
-function initAppSettings(APP_CONFIG, $localStorage, _){
-    if($localStorage.has('settings')){
-        _.merge(APP_CONFIG, $localStorage.getObject('settings', {}));
+    angular.module('starter.services', []);
+    angular.module('starter.controllers', []);
+    angular.module('starter.routes', []);
+
+    // Manually bootstrap application
+    // So we can load config from server or do some stuff before
+    // ionic / angular job
+    angular.element(document).ready(function() {
+
+        angular.injector(['modules.loader']).get('loaderService').show();
+
+        setTimeout(function(){
+
+            // We use here ionic instead of $ionicPlatform.ready in order to run angular app ONLY when
+            // ionic platform is ready. We ensure no side effect
+            ionic.Platform.ready(function() {
+                angular.bootstrap(document, ['starter']);
+            });
+        }, 1000); // @todo 1s to see loader in any way
+    });
+
+    /**
+     *
+     * @param APP_CONFIG
+     * @param $localStorage
+     * @param _
+     */
+    function initAppSettings(APP_CONFIG, $localStorage, _){
+        if($localStorage.has('settings')){
+            _.merge(APP_CONFIG, $localStorage.getObject('settings', {}));
+        }
     }
-}
 
-function run($ionicPlatform, popupService, $rootScope, $state, user, $localStorage, STORAGE_KEYS, CONFIG, LOCAL_CONFIG, $log, $ionicLoading, EVENTS, $ionicHistory, MESSAGES, toastService, authenticationService) {
+    /**
+     * Init user value with possible storage cached value
+     * @param $localStorage
+     */
+    function initUser(user, $localStorage){
+        if($localStorage.has('user')){
+            user = _.merge(user, $localStorage.getObject('user'));
+        }
+    }
 
-    // At startup always go to blank page until platform is not ready
-    // The blank page does nothing and can be hide by a loader for example
-    $state.go(CONFIG.state.blank);
+    /**
+     * Main run method
+     * @param $ionicPlatform
+     * @param popupService
+     * @param $rootScope
+     * @param $state
+     * @param user
+     * @param $localStorage
+     * @param STORAGE_KEYS
+     * @param CONFIG
+     * @param LOCAL_CONFIG
+     * @param $log
+     * @param $ionicLoading
+     * @param EVENTS
+     * @param $ionicHistory
+     * @param MESSAGES
+     * @param toastService
+     * @param authenticationService
+     */
+    function run($timeout, $ionicPlatform, APP_CONFIG, loaderService, popupService, $rootScope, $state, user, $localStorage, STORAGE_KEYS, CONFIG, LOCAL_CONFIG, $log, $ionicLoading, EVENTS, $ionicHistory, MESSAGES, toastService, authenticationService) {
 
-    // http://ngcordova.com/docs/common-issues/
-    $ionicPlatform.ready(function() {
+        console.info('Here is the global config', CONFIG);
+        console.info('Here is the local config', LOCAL_CONFIG);
+        console.info('Here is the app settings', APP_CONFIG);
 
-        
-        $ionicLoading.show();
-
+        /* -----------------------------------------------------
+         *
+         *          Run startup logic
+         *
+         *  ---------------------------------------------------- */
         // Inject config inside scope, in that way we can use state.foo for example inside html
         $rootScope.CONFIG = CONFIG;
 
@@ -55,93 +111,85 @@ function run($ionicPlatform, popupService, $rootScope, $state, user, $localStora
         }
 
         // Add event for our application
-        $rootScope.$on(EVENTS.APP_READY, onAppReady);
         $rootScope.$on(EVENTS.USER_LOGGED_OUT, onUserLoggedOut);
         $rootScope.$on(EVENTS.UNEXPECTED_ERROR, onUnexpectedError);
         $rootScope.$on(EVENTS.SERVER_ACCESS_ERROR, onServerAccessError);
         $rootScope.$on(EVENTS.SERVER_UNAUTHENTICATED_ERROR, onServerResponseUnauthenticated);
-        
+        $rootScope.$on(EVENTS.REQUEST_SENT, onRequestSent);
+        $rootScope.$on(EVENTS.RESPONSE_RECEIVED, onResponseReceived);
+
         // Add events relative to routing
         $rootScope.$on('$stateChangeSuccess', onStateChangeSuccess);
         $rootScope.$on('$stateChangeStart', onStateChangeStart);
         $rootScope.$on('$stateChangeError', onStateChangeError);
-        
-        // Simulate a little timeout for a better app loading effect.
-        // We have time to see loading even if app start really fast
-        setTimeout(function(){
-            $rootScope.$emit(EVENTS.APP_READY); // firing an event upwards
-        }, 1000);
 
+        //$ionicHistory.clearHistory();
+        //$ionicHistory.clearCache();
+
+        // Always go to welcome view on startup
+        // It will check if user want to hide welcome. Then go to home. If user is not logged go to login
+        var state = null;
+        $ionicHistory.nextViewOptions({ disableAnimate: false, disableBack: true });
+        if( $localStorage.get(STORAGE_KEYS.HIDE_WELCOME, false) === true ){
+            state = CONFIG.state.home;
+        }
+        else{
+            state = CONFIG.state.welcome;
+        }
+        // There is a bug (or maybe not) that make $state.go not working in run(). The route from the url is processed after this $state.go
+        // ex: if page is /events, $state.go('welcome') will occur and then $state.go('events') will happen and make previous $state not working
+        // The workaround is to use $timeout. It seems that the possible /events controller is not initialized so I guess it's ok for now.
+        $timeout(function(){
+            if( $localStorage.get(STORAGE_KEYS.HIDE_WELCOME, false) === true ) $log.info('Route welcome is bypassed as user want, go to home');
+            $state.go(state);
+            loaderService.hide();
+        });
+
+        /* -----------------------------------------------------
+         *
+         *          Events functions declaration
+         *
+         *  ---------------------------------------------------- */
 
         /*
-         *
+         * This event is fired when
          */
-        function onAppReady(event, data){
-            $log.debug('event -> ', EVENTS.APP_READY);
-
-            $ionicHistory.clearHistory();
-            $ionicHistory.clearCache();
-            
-            // Only define these event when app is ready
-            // It avoid display stuff on top of possible loading screen during app starting
-            $rootScope.$on(EVENTS.REQUEST_SENT, onRequestSent);
-            $rootScope.$on(EVENTS.RESPONSE_RECEIVED, onResponseReceived);
-
-            // Hide ionic loading screen as our app is ready to use
-            $ionicLoading.hide();
-
-            // Always go to welcome view on startup
-            // It will check if user want to hide welcome. Then go to home. If user is not logged go to login
-            $ionicHistory.nextViewOptions({ disableAnimate: true, disableBack: true });
-            if( $localStorage.has(STORAGE_KEYS.HIDE_WELCOME) && $localStorage.get(STORAGE_KEYS.HIDE_WELCOME, false) ){
-                $log.debug('Route welcome is bypassed as user want');
-                $state.go(CONFIG.state.home);
-            }
-            else{
-                $state.go(CONFIG.state.welcome).then(function(){ });
-            }
-
-            /*
-             * This event is fired when
-             */
-            function onRequestSent(event, data){
-                if(!LOCAL_CONFIG.hideEventLog) $log.debug('event -> ', EVENTS.REQUEST_SENT);
-                $ionicLoading.show();
-            }
-
-            /*
-             *
-             */
-            function onResponseReceived(event, data){
-                if(!LOCAL_CONFIG.hideEventLog) $log.debug('event -> ', EVENTS.RESPONSE_RECEIVED);
-                $ionicLoading.hide();
-            }
+        function onRequestSent(event, data){
+            if(!LOCAL_CONFIG.hideEventLog) $log.debug('event -> ', EVENTS.REQUEST_SENT);
+            $ionicLoading.show();
         }
 
         /*
          *
          */
+        function onResponseReceived(event, data){
+            if(!LOCAL_CONFIG.hideEventLog) $log.debug('event -> ', EVENTS.RESPONSE_RECEIVED);
+            $ionicLoading.hide();
+        }
+
+        /**
+         * This events is thrown whenever the app redirect from a view to another view.
+         * This method ensure that:
+         *  - Authenticated user wont reach login page.
+         *  - Unauthenticated user wont reach routes that need authenticated user.
+         */
         function onStateChangeStart(event, toState, toParams, fromState, fromParams){
             if(!LOCAL_CONFIG.hideEventLog) $log.debug('event -> $stateChangeStart -> from ' + fromState.name + ' to ' + toState.name);
 
-            // Prevent navigation to blank
-            if( toState.name == CONFIG.state.blank ){
-                $log.debug('Route blank is not accessible, event stopped');
-                event.preventDefault();
-            }
-            
             // Authentication verification
             if(LOCAL_CONFIG.bypassLogin !== true){
                 // policy is to require authentication except if specified as not
                 if(!(toState.data && toState.data.authRequired === false) && !authenticationService.isAuthenticated()){
                     // User is not authenticated
-                    $log.debug('Route require authentication and user is not, redirected to ' + CONFIG.state.login);
+                    $log.info('Route require authentication and user is not, redirected to ' + CONFIG.state.login);
                     event.preventDefault();
                     $state.go(CONFIG.state.login);
                 }
-
+                else {
+                    if(toState.data && toState.data.authRequired) $log.info('Route require authentication, storage user is authenticated, continue');
+                }
             }
-            
+
             // Redirect user if he is already logged
             if( (toState.data && toState.data.accessibleWhenAuthenticated === true) && (toState.name == CONFIG.state.login || toState.name == CONFIG.state.register) && authenticationService.isAuthenticated() ){
                 $log.debug('Route ' + toState.name + ' is redirected because user is already logged');
@@ -153,7 +201,7 @@ function run($ionicPlatform, popupService, $rootScope, $state, user, $localStora
         function onStateChangeError(event, toState, toParams, fromState, fromParams){
             if(!LOCAL_CONFIG.hideEventLog) $log.debug('event -> $stateChangeError -> from ' + fromState.name + ' to ' + toState.name);
         }
-        
+
         /*
          *
          */
@@ -191,12 +239,28 @@ function run($ionicPlatform, popupService, $rootScope, $state, user, $localStora
             if(!LOCAL_CONFIG.hideEventLog) $log.debug('event -> ', EVENTS.SERVER_ACCESS_ERROR);
             toastService.showLongBottom(MESSAGES.SERVER_ACCESS_ERROR);
         }
-        
+
         function onUserLoggedOut(event, data){
+            $log.info('User has been logged out');
             popupService.show(popupService.template.LOGGED_OUT);
             $state.go(CONFIG.state.login);
         }
-    });
-    
-    
-}
+
+    }
+
+    function displayConsoleWelcomeMessage(){
+        return "" +
+            "----------------------------------------------------------------------------------\n" +
+            "|                                                                                |\n" +
+            "|  Hey buddy, it's good to see you back and motivated to code redh00d ;)         |\n" +
+            "|  Don't forget to:                                                              |\n" +
+            "|      - customize app.local.config.js depending of your needs                   |\n" +
+            "|      - tart the ws server if you need it                                       |\n" +
+            "|      - go to ws endpoint to allow https secure connection (otherwise           |\n" +
+            "|        you will receive CONNECTION_REFUSE error)                               |\n" +
+            "|  And remember, you are a part of an awesome team <3                            |\n" +
+            "|                                                                                |\n" +
+            "----------------------------------------------------------------------------------"
+    }
+
+}());

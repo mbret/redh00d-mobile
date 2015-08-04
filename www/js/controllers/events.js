@@ -4,8 +4,9 @@ angular.module('starter.controllers')
     .controller('EventsCtrl', EventsCtrl);
 
 
-EventsCtrl.$inject = ['$scope', 'Events', '$ionicLoading', '$ionicHistory', '$ionicSideMenuDelegate', 'UserService'];
-function EventsCtrl($scope, Events, $ionicLoading, $ionicHistory, $ionicSideMenuDelegate, UserService) {
+EventsCtrl.$inject = ['$scope', 'Events', '$state', '$ionicHistory', 'CONFIG', 'UserService'];
+function EventsCtrl($scope, Events, $state, $ionicHistory, CONFIG, UserService, user) {
+
 
     $scope.events = Events.fetchAll();
     
@@ -14,5 +15,11 @@ function EventsCtrl($scope, Events, $ionicLoading, $ionicHistory, $ionicSideMenu
     setTimeout(function(){
         var currentAuth = UserService.me();
     }, 5000);
+
+
+    $scope.goContacts = function(){
+        $state.go(CONFIG.state.contacts.list);
+        
+    }
 
 }

@@ -5,11 +5,6 @@ angular.module('starter')
     .constant('_', window._)
 
     .constant('EVENTS', {
-        // The APP_READY event should be called when the app is ready to use for the user.
-        // Typically the app is launched by OS, then cordova launch and then our app launch interval is thrown
-        // after $ionicPlatform.ready and whatever we define.
-        APP_READY: 'appReady',
-
         USER_LOGGED_OUT: 'userLoggedOut',
 
         // This event should be called when an unexpected error happened
@@ -33,7 +28,20 @@ angular.module('starter')
     // It avoid to search and replace when changes are made on API side.
     .constant('MAPPERS', {
         RESPONSE_ACCESS_TOKEN: 'token', // token json label for /auth
-        RESPONSE_CODE_E_EMAIL_ALREADY_TAKEN: 'E_EMAIL_ALREADY_TAKEN'
+    })
+
+    /**
+     * The API constant provide all constant that are share between app and api server to communicate.
+     * For example the api return some error code. This constant provide same error code constant to match.
+     * In this way we just set one time on api size and use it in app.
+     * @todo load ERROR_CODE from server
+     */
+    .constant('API', {
+        ERROR_CODE: {
+            E_EMAIL_ALREADY_TAKEN: 'E_EMAIL_ALREADY_TAKEN',
+            E_PASSWORD_RESET_NO_PASSWORD_SET_YET: 'E_PASSWORD_RESET_NO_PASSWORD_SET_YET',
+            E_EMAIL_DOES_NOT_BELONG_TO_SOMEONE: 'E_EMAIL_DOES_NOT_BELONG_TO_SOMEONE'
+        }
     })
 
     .constant('STORAGE_KEYS', {
@@ -52,7 +60,7 @@ angular.module('starter')
  * This object is used through the app to store the current logged user.
  */
 function configureUser($provide) {
-    $provide.constant('user', {
+    $provide.value('user', {
         authenticated: false // pass to true to bypass login
     });
 }
@@ -70,19 +78,29 @@ function configureCONFIG($provide, LOCAL_CONFIG, _) {
         route: {
             login: apiUrl + '/auth/login',
             register: apiUrl + '/auth/register',
+            resetPassword: apiUrl + '/users/:email/password-reset',
             facebookAuth: apiUrl + '/auth/facebook',
-            me: apiUrl + '/helper/me'
+            me: apiUrl + '/helper/me',
+            contacts: {
+                fetchAll: '/users/:userid/friends',
+            },
+            users: {
+                fetch: '/users/:id'
+            }
         },
         state: {
-            blank: 'blank',
             home: 'events',
             login: 'login',
+            logout: 'logout',
             register: 'register',
-            forgotpassword: 'register',
+            credentialLost: 'credential-lost',
             welcome: 'welcome',
             contacts: {
                 list: 'contacts.list',
-                groups: 'contacts.groups',
+                groups: {
+                    list: 'contacts.groupsList',
+                    create: 'contacts.groupsCreate'
+                },
                 detail: 'contacts.detail'
             },
             event: {
