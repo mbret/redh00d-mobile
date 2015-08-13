@@ -1,13 +1,18 @@
-<ion-view view-title="Event - Info">
-
-    <!--For now auto navigation is bugged and back button will not show, just force back button-->
-    <ion-nav-buttons side="left">
-        <button class="button back-button button-clear header-item" ui-sref="{{CONFIG.state.home}}">
-            <i class="icon ion-android-arrow-back"></i>
-        </button>
-    </ion-nav-buttons>
+<ion-view hide-nav-bar="true">
 
 
-    <img src="/img/event1.jpg">
+
+    <ion-header-bar class="bar bar-header bar-assertive">
+        <h1 class="title">Event - Info</h1>
+        <!--For now auto navigation is bugged and back button will not show, just force back button-->
+        <ion-nav-buttons side="left">
+            <button class="button back-button button-clear header-item" ui-sref="{{CONFIG.state.home}}">
+                <i class="icon ion-android-arrow-back"></i>
+            </button>
+        </ion-nav-buttons>
+    </ion-header-bar>
+
+
+
 
 </ion-view>
