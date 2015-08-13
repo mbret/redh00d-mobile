@@ -77,7 +77,7 @@ function routes($stateProvider, $urlRouterProvider) {
                          }
                      }
                  })
-
+/*
         .state('events.details',{
                     url: '/details',
                     templateUrl: 'templates/events/events-details.html',
@@ -87,7 +87,7 @@ function routes($stateProvider, $urlRouterProvider) {
                                controller: 'EventsDetailCtrl'
                                         }
                             }
-                })
+                })*/
         
         .state('login', {
             url: "/login",
