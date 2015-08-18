@@ -78,7 +78,17 @@ function routes($stateProvider, $urlRouterProvider) {
                          }
                      }
                  })
-
+/*
+        .state('events.details',{
+                    url: '/details',
+                    templateUrl: 'templates/events/events-details.html',
+                    views: {
+                            'list-tab': {
+                               templateUrl: "templates/events/events-details.html",
+                               controller: 'EventsDetailCtrl'
+                                        }
+                            }
+                })*/
         
         .state('login', {
             url: "/login",
