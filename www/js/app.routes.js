@@ -49,6 +49,7 @@ function routes($stateProvider, $urlRouterProvider) {
         })
 
         .state('event.info', {
+
             url: "/info",
             views: {
                 'info-tab': {
