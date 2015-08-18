@@ -1,0 +1,33 @@
+<ion-view view-title="Contacts">
+
+    <!--  <ion-header-bar class="bar bar-header bar-assertive">
+                    <button menu-toggle="left" class="button icon ion-navicon"></button>
+                    <h1 class="title">Events</h1>
+                    <button class="button">Edit</button>
+                </ion-header-bar> -->
+
+    <ion-nav-bar class="bar-assertive nav-title-slide-ios" align-title="center">
+        <!--By default and when a navigation history is available this back button will appear on any sub view's header-->
+        <!--It can be hide thanks to directive-->
+        <ion-nav-back-button class="button-icon ion-arrow-left-c">
+        </ion-nav-back-button>
+        <ion-nav-buttons side="left">
+            <button menu-toggle="left" class="button icon ion-navicon">
+            </button>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+
+    <ion-content>
+        <!-- events list -->
+        <div class="list">
+
+            <a class="item item-thumbnail-left" ui-sref="{{CONFIG.state.event.info}}">
+                <img src="/img/event1.jpg">
+                <h2>Pretty Hate Machine</h2>
+                <p>Nine Inch Nails</p>
+            </a>
+
+        </div>
+    </ion-content>
+
+</ion-view>

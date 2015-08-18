@@ -34,30 +34,42 @@ function routes($stateProvider, $urlRouterProvider) {
         // Event parts
         .state('events',{
             url: '/events',
-            templateUrl: 'templates/events.html',
+            abstract: true,
+            templateUrl: 'templates/events/events.html',
             controller: 'EventsCtrl',
             data: {
                 authRequired: true
             }
         })
 
-        .state('event', {
-            abstract: true,
-            url: '/event',
-            templateUrl: 'templates/event/event.html',
-            controller: 'ContactsCtrl'
-        })
-
-        .state('event.info', {
-
-            url: "/info",
+        .state('events.list', {
+            url: "/list",
             views: {
-                'info-tab': {
-                    templateUrl: "templates/event/event-info.html",
+                'content': {
+                    templateUrl: "templates/events/events-list.html",
                     controller: 'ContactsListCtrl'
                 }
             }
         })
+
+        .state('events.info', {
+            url: "/info",
+            views: {
+                'content': {
+                    templateUrl: "templates/events/events-info.html",
+                    controller: 'ContactsListCtrl'
+                }
+            }
+        })
+
+        .state('event', {
+            abstract: true,
+            url: '/events',
+            templateUrl: 'templates/event/events.html',
+            controller: 'ContactsCtrl'
+        })
+
+
 
         .state('event.drink', {
                     url: "/drink",
@@ -69,7 +81,7 @@ function routes($stateProvider, $urlRouterProvider) {
                     }
                 })
 
-         .state('event.guest', {
+        .state('event.guest', {
                      url: "/guest",
                      views: {
                          'guest-tab': {

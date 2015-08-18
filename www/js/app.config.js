@@ -89,7 +89,7 @@ function configureCONFIG($provide, LOCAL_CONFIG, _) {
             }
         },
         state: {
-            home: 'events',
+            home: 'events.list',
             login: 'login',
             logout: 'logout',
             register: 'register',
@@ -104,7 +104,7 @@ function configureCONFIG($provide, LOCAL_CONFIG, _) {
                 detail: 'contacts.detail'
             },
             event: {
-                info: 'event.info',
+                info: 'events.info',
                 drink: 'event.drink',
                 guest: 'event.guest'
             },
